@@ -848,12 +848,12 @@ public class Main {
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (map.containsKey(c)){
-                char top = stack.isEmpty()? '#' : stack.pop();
-                if (top != map.get(c)){
+            if (map.containsKey(c)) {
+                char top = stack.isEmpty() ? '#' : stack.pop();
+                if (top != map.get(c)) {
                     return false;
                 }
-            }else {
+            } else {
                 stack.push(c);
             }
         }
@@ -862,6 +862,7 @@ public class Main {
 
     /**
      * 合并两个有序链表
+     *
      * @param l1
      * @param l2
      * @return
@@ -869,11 +870,11 @@ public class Main {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode preHead = new ListNode(0);
         ListNode prev = preHead;
-        while (l1 != null && l2 != null){
-            if (l1.val < l2.val){
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
                 prev.next = l1;
                 l1 = l1.next;
-            }else {
+            } else {
                 prev.next = l2;
                 l2 = l2.next;
             }
@@ -887,21 +888,22 @@ public class Main {
     /**
      * 括号生成
      * 数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
-     *
+     * <p>
      *  
-     *
+     * <p>
      * 示例：
-     *
+     * <p>
      * 输入：n = 3
      * 输出：[
-     *        "((()))",
-     *        "(()())",
-     *        "(())()",
-     *        "()(())",
-     *        "()()()"
-     *      ]
+     * "((()))",
+     * "(()())",
+     * "(())()",
+     * "()(())",
+     * "()()()"
+     * ]
+     * <p>
+     * 暴力方法：生成所有可能的序列，然后逐一判断
      *
-     *      暴力方法：生成所有可能的序列，然后逐一判断
      * @param n
      * @return
      */
@@ -912,11 +914,11 @@ public class Main {
     }
 
     private void generateAll(char[] current, int pos, List<String> result) {
-        if (pos == current.length){
-            if (valid(current)){
+        if (pos == current.length) {
+            if (valid(current)) {
                 result.add(new String(current));
             }
-        }else {
+        } else {
             current[pos] = '(';
             generateAll(current, pos + 1, result);
             current[pos] = ')';
@@ -926,18 +928,19 @@ public class Main {
 
     /**
      * 判断小括号序列是否合法
+     *
      * @param current
      * @return
      */
     private boolean valid(char[] current) {
         int balance = 0;
         for (char c : current) {
-            if (c == '('){
+            if (c == '(') {
                 balance++;
-            }else {
+            } else {
                 balance--;
             }
-            if (balance < 0){
+            if (balance < 0) {
                 return false;
             }
         }
@@ -946,8 +949,9 @@ public class Main {
 
     /**
      * 方法一还有改进的余地：我们可以只在序列仍然保持有效时才添加 '(' or ')'，而不是像 方法一 那样每次添加。我们可以通过跟踪到目前为止放置的左括号和右括号的数目来做到这一点，
-     *
+     * <p>
      * 如果左括号数量不大于 nn，我们可以放一个左括号。如果右括号数量小于左括号的数量，我们可以放一个右括号。
+     *
      * @param n
      * @return
      */
@@ -957,7 +961,7 @@ public class Main {
         return ans;
     }
 
-    public void backtrack(List<String> ans, StringBuilder cur, int open, int close, int max){
+    public void backtrack(List<String> ans, StringBuilder cur, int open, int close, int max) {
         if (cur.length() == max * 2) {
             ans.add(cur.toString());
             return;
@@ -965,33 +969,34 @@ public class Main {
 
         if (open < max) {
             cur.append('(');
-            backtrack(ans, cur, open+1, close, max);
+            backtrack(ans, cur, open + 1, close, max);
             cur.deleteCharAt(cur.length() - 1);
         }
         if (close < open) {
             cur.append(')');
-            backtrack(ans, cur, open, close+1, max);
+            backtrack(ans, cur, open, close + 1, max);
             cur.deleteCharAt(cur.length() - 1);
         }
     }
 
     /**
-     *  n = 2 为例，画树形结构图。方法是 “做减法”。
-     *  画图以后，可以分析出的结论：
-     *
+     * n = 2 为例，画树形结构图。方法是 “做减法”。
+     * 画图以后，可以分析出的结论：
+     * <p>
      * 当前左右括号都有大于 0 个可以使用的时候，才产生分支；
-     *
+     * <p>
      * 产生左分支的时候，只看当前是否还有左括号可以使用；
-     *
+     * <p>
      * 产生右分支的时候，还受到左分支的限制，右边剩余可以使用的括号数量一定得在严格大于左边剩余的数量的时候，才可以产生分支；
-     *
+     * <p>
      * 在左边和右边剩余的括号数都等于 0 的时候结算。
+     *
      * @param n
      * @return
      */
     public List<String> generateParenthesis2(int n) {
         List<String> res = new ArrayList<>();
-        if (n == 0){
+        if (n == 0) {
             return res;
         }
         dfs("", n, n, res);
@@ -1007,17 +1012,17 @@ public class Main {
     private void dfs(String curStr, int left, int right, List<String> res) {
         // 因为每一次尝试，都使用新的字符串变量，所以无需回溯
         // 在递归终止的时候，直接把它添加到结果集即可，注意与「力扣」第 46 题、第 39 题区分
-        if (left == 0 && right == 0){
+        if (left == 0 && right == 0) {
             res.add(curStr);
             return;
         }
-        if (left > right){// 剪枝（如图，左括号可以使用的个数严格大于右括号可以使用的个数，才剪枝，注意这个细节）
+        if (left > right) {// 剪枝（如图，左括号可以使用的个数严格大于右括号可以使用的个数，才剪枝，注意这个细节）
             return;
         }
-        if (left > 0){
+        if (left > 0) {
             dfs(curStr + "(", left - 1, right, res);
         }
-        if (right > 0){
+        if (right > 0) {
             dfs(curStr + ")", left, right - 1, res);
         }
     }
@@ -1025,6 +1030,7 @@ public class Main {
     /**
      * 递归方法dp[i] = "(" + dp[可能的括号对数] + ")" + dp[剩下的括号对数]
      * dp[i] = "(" + dp[j] + ")" + dp[i- j - 1] , j = 0, 1, ..., i - 1
+     *
      * @param n
      * @return
      */
@@ -1056,21 +1062,22 @@ public class Main {
         return dp.get(n);
     }
 
-    public double myPow(double x, int n){
+    public double myPow(double x, int n) {
         long N = n;
         return N >= 0 ? quickMul(x, N) : 1.0 / quickMul(x, -N);
     }
 
     private double quickMul(double x, long n) {
-        if (n == 0){
+        if (n == 0) {
             return 1.0;
         }
-        double y = quickMul(x,n / 2);
+        double y = quickMul(x, n / 2);
         return n % 2 == 0 ? y * y : y * y * x;
     }
 
     /**
      * 这里用了一个巧妙的方法，如果是奇数，则乘过去
+     *
      * @param x
      * @param N
      * @return
@@ -1095,7 +1102,7 @@ public class Main {
 
     public int singleNumber(int[] nums) {
         int number = nums[0];
-        for (int i = 1; i < nums.length ; i++) {
+        for (int i = 1; i < nums.length; i++) {
             number = number ^ nums[i];
         }
         return number;
@@ -1104,18 +1111,19 @@ public class Main {
     /**
      * 合并k个链表
      * 简单的思路是先把所有元素取出来，放到一个数组中，快排，然后再构建链表 空间复杂度较高
-     *
+     * <p>
      * 或者用一个优先队列，将k个链表的头结点放到队列中，每次取出来第一个，就是最小的，然后将后续的放进去
      * 时间复杂度：O(n*log(k))，n 是所有链表中元素的总和，k 是链表个数。
-     *
+     * <p>
      * 或者就是逐一对比，循环k-1次
-     *
+     * <p>
      * 或者分治法，两两合并，再两两合并，类似于归并排序
+     *
      * @param lists
      * @return
      */
     public ListNode mergeKLists(ListNode[] lists) {
-        if (lists == null || lists.length == 0){
+        if (lists == null || lists.length == 0) {
             return null;
         }
         PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, new Comparator<ListNode>() {
@@ -1127,14 +1135,14 @@ public class Main {
         ListNode dummy = new ListNode(0);
         ListNode p = dummy;
         for (ListNode list : lists) {
-            if (list != null){
+            if (list != null) {
                 queue.add(list);
             }
         }
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             p.next = queue.poll();
             p = p.next;
-            if (p.next != null){
+            if (p.next != null) {
                 queue.add(p.next);
             }
         }
@@ -1142,13 +1150,14 @@ public class Main {
     }
 
     public ListNode mergeKLists1(ListNode[] lists) {
-        if (lists == null || lists.length == 0){
+        if (lists == null || lists.length == 0) {
             return null;
         }
         return merge(lists, 0, lists.length - 1);
     }
-    private ListNode merge(ListNode[] lists, int left, int right){
-        if (left == right){
+
+    private ListNode merge(ListNode[] lists, int left, int right) {
+        if (left == right) {
             return lists[left];
         }
         int mid = (left + right) / 2;
@@ -1160,12 +1169,13 @@ public class Main {
 
     /**
      * 链表两两节点交换，不能只修改值
-     *  迭代法
-     *  firstNode（即 A） 和 secondNode（即 B） 分别遍历偶数节点和奇数节点，即两步看作一步。
+     * 迭代法
+     * firstNode（即 A） 和 secondNode（即 B） 分别遍历偶数节点和奇数节点，即两步看作一步。
      * 交换两个节点：
-     *  firstNode.next = secondNode.next
-     *  secondNode.next = firstNode
+     * firstNode.next = secondNode.next
+     * secondNode.next = firstNode
      * 还需要更新 prevNode.next 指向交换后的头
+     *
      * @param head
      * @return
      */
@@ -1173,12 +1183,12 @@ public class Main {
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         ListNode preNode = dummy;
-        while (head != null && head.next != null){
+        while (head != null && head.next != null) {
             ListNode firstNode = head;
             ListNode secondNode = head.next;
 
             preNode.next = secondNode;
-            firstNode.next =secondNode.next;
+            firstNode.next = secondNode.next;
             secondNode.next = firstNode;
 
             preNode = firstNode;
@@ -1194,11 +1204,12 @@ public class Main {
      * 下一次递归则是传递的是下一对需要交换的节点。若链表中还有节点，则继续递归。
      * 交换了两个节点以后，返回 secondNode，因为它是交换后的新头。
      * 在所有节点交换完成以后，我们返回交换后的头，实际上是原始链表的第二个节点。
+     *
      * @param head
      * @return
      */
     public ListNode swapPairs1(ListNode head) {
-        if (head == null || head.next == null){
+        if (head == null || head.next == null) {
             return head;
         }
         ListNode firstNode = head;
@@ -1210,49 +1221,374 @@ public class Main {
         return secondNode;
     }
 
+    /**
+     * 翻转链表，常规解法
+     * 头插法，
+     *
+     * @param head
+     * @return
+     */
+    public ListNode reverseList(ListNode head) {
+        ListNode pre = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        return pre;
+    }
 
-    public static void main(String[] args) {
-        System.out.println("请输入一个数：");
-        Scanner sc = new Scanner(System.in);
-        String str = sc.next();
-        //将用户输入的字符串转换成char数组
-        char[] numChar = str.toCharArray();
-        String[] chinese = {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
-        String[] unit = {"十", "百", "千", "万", "十", "百", "千", "亿", "十", "百", "千"};
-        StringBuffer sb = new StringBuffer();
-        //获取用户输入的字符串长度
-        int size = numChar.length;
-        //遍历char数组
-        for (int i = 0; i < numChar.length; i++) {
-            //将用户输入的数字拿出来
-            //比如用户输入1234数字
-            //numChar['1','2','3','4']
-            //numChar[0]
-            //因此拿到的阿拉伯数字就是num=1
-            int num = Integer.parseInt(String.valueOf(numChar[i]));
-            //因为咱们的汉字和数组下标一一对应，所以可以直接将拿到的阿拉伯数字作为中文数组的下标取汉字
-            //因此这时chinese[1]对应的就是汉字"一"
-            //再就是打印一个汉字数字就加一个单位
-            //通过观察可以找出阿拉伯数字和单位的关系，关系如下
-            //1234长度为4，对应到计数单位数组4索引是”万”单位
-            //1是千单位，以4-1就可以得到计数单位数组的"千”单位
-            //4-1=3|unit[3]拿第一个千
-            //4-2=2|unit[2]拿第二个百
-            //4-3=1|unit[1]拿第三个十
-            if (i != 0) {
-                //数组长度-i
-                //上述对应成代码就是 size-i
-                //因为计数单位数组省略了"个”单位
-                //所以需要减去1，取出所有单位
-                //单位+数字|千二百三十四
-                sb.append(unit[size - i - 1] + chinese[num]);
-            } else {
-                //这里是第一个数字，第一个数字前面没有计数单位，所以单独拿出处理
-                sb.append(chinese[num]);
+    /**
+     * 递归方法
+     *
+     * @param head
+     * @return
+     */
+    public ListNode reverseList1(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode p = reverseList1(head.next);
+        head.next.next = head;
+        head.next = null;
+        return p;
+    }
+
+    /**
+     * k个一组反转链表
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k == 1) {
+            return head;
+        }
+        ListNode tail = head;
+        // 找该组k个节点的尾节点
+        for (int i = 1; i < k && tail != null; i++) {
+            tail = tail.next;
+        }
+        // 如果为空，说明长度不够，原顺序返回
+        if (tail == null) {
+            return head;
+        }
+        // 记录一下下一组的头结点
+        ListNode next = tail.next;
+        reverse(head, tail);
+        // 连接上下一组的头结点
+        head.next = reverseKGroup(next, k);
+        return tail;
+    }
+
+    private void reverse(ListNode head, ListNode tail) {
+        if (head == tail) {
+            return;
+        }
+        reverse(head.next, tail);
+        head.next.next = head;
+        head.next = null;
+    }
+
+    /**
+     * 先计算长度的解法
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup1(ListNode head, int k) {
+        ListNode dummy = new ListNode(0), prev = dummy, curr = head, next;
+        dummy.next = head;
+        int length = 0;
+        while (head != null) {
+            length++;
+            head = head.next;
+        }
+        head = dummy.next;
+        for (int i = 0; i < length / k; i++) {
+            for (int j = 0; j < k - 1; j++) {
+                next = curr.next;
+                curr.next = next.next;
+                next.next = prev.next;
+                prev.next = next;
+            }
+            prev = curr;
+            curr = prev.next;
+        }
+        return dummy.next;
+    }
+
+    public ListNode reverseKGroup2(ListNode head, int k) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode pre = head;
+        ListNode tail = head;
+        while (true) {
+            int count = 0;
+            while (tail != null && count != k) {
+                count++;
+                tail = tail.next;
+            }
+            if (tail == null) {
+                break;
+            }
+            ListNode head1 = pre.next;
+            while (pre.next != tail) {
+                ListNode cur = pre.next;
+                pre.next = cur.next;
+                cur.next = tail.next;
+                tail.next = cur;
+            }
+            pre = head1;
+            tail = head1;
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 删除排序数组的重复项
+     *
+     * @param nums
+     * @return
+     */
+    public int removeDuplicates(int[] nums) {
+        //使用双指针
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int i = 0, j = 1;
+        while (j < nums.length) {
+            if (nums[i] != nums[j]) {
+                i++;
+                nums[i] = nums[j];
+            }
+            j++;
+        }
+        return i + 1;
+    }
+
+    /**
+     * 移除元素，如果元素值与给定值相等，移除
+     *
+     * @param nums
+     * @param val
+     * @return
+     */
+    public int removeElement(int[] nums, int val) {
+        int i = 0;
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] != val) {
+                nums[i] = nums[j];
+                i++;
             }
         }
-        //结果就是一千二百三十四
-        System.out.println(sb);
+        return i;
+    }
+
+    /**
+     * 两数相除，给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+     * <p>
+     * 返回被除数 dividend 除以除数 divisor 得到的商。
+     * <p>
+     * 整数除法的结果应当截去（truncate）其小数部分，例如：truncate(8.345) = 8 以及 truncate(-2.7335) = -2
+     *
+     * @param dividend
+     * @param divisor
+     * @return
+     */
+    public int divide(int dividend, int divisor) {
+        if (dividend == 0) {
+            return 0;
+        }
+        boolean flag = true;
+        if (dividend < 0) {
+            flag = !flag;
+        }
+        if (divisor < 0) {
+            flag = !flag;
+        }
+        long dividend1 = (long) dividend;
+        long divisor1 = (long) divisor;
+        dividend1 = dividend1 < 0 ? -dividend1 : dividend1;
+        divisor1 = divisor1 < 0 ? -divisor1 : divisor1;
+        if (dividend1 < divisor1) {
+            return 0;
+        }
+        long ans = 0L;
+        while (dividend1 >= divisor1) {
+            dividend1 = dividend1 - divisor1;
+            ans++;
+        }
+        if (ans > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        return flag ? (int) ans : (int) (-ans);
+    }
+
+    /**
+     * 两数相除，给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+     * 解题思路：这题是除法，所以先普及下除法术语
+     * 商，公式是：(被除数-余数)÷除数=商，记作：被除数÷除数=商...余数，是一种数学术语。
+     * 在一个除法算式里，被除数、余数、除数和商的关系为：(被除数-余数)÷除数=商，记作：被除数÷除数=商...余数，
+     * 进而推导得出：商×除数+余数=被除数。
+     * <p>
+     * 要求商，我们首先想到的是减法，能被减多少次，那么商就为多少，但是明显减法的效率太低
+     * <p>
+     * 那么我们可以用位移法，因为计算机在做位移时效率特别高，向左移1相当于乘以2，向右位移1相当于除以2
+     * <p>
+     * 我们可以把一个dividend（被除数）先除以2^n，n最初为31，不断减小n去试探,当某个n满足dividend/2^n>=divisor时，
+     * <p>
+     * 表示我们找到了一个足够大的数，这个数*divisor是不大于dividend的，所以我们就可以减去2^n个divisor，以此类推
+     * <p>
+     * 我们可以以100/3为例
+     * <p>
+     * 2^n是1，2，4，8...2^31这种数，当n为31时，这个数特别大，100/2^n是一个很小的数，肯定是小于3的，所以循环下来，
+     * <p>
+     * 当n=5时，100/32=3, 刚好是大于等于3的，这时我们将100-32*3=4，也就是减去了32个3，接下来我们再处理4，同样手法可以再减去一个3
+     * <p>
+     * 所以一共是减去了33个3，所以商就是33
+     * <p>
+     * 这其中得处理一些特殊的数，比如divisor是不能为0的，Integer.MIN_VALUE和Integer.MAX_VALUE
+     */
+    public int divide1(int dividend, int divisor) {
+        if (dividend == 0) {
+            return 0;
+        }
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+        boolean negative;
+        negative = (dividend ^ divisor) < 0;//用异或来计算是否符号相异
+        long t = Math.abs((long) dividend);
+        long d = Math.abs((long) divisor);
+        int result = 0;
+        for (int i = 31; i >= 0; i--) {
+            if ((t >> i) >= d) {//找出足够大的数2^n*divisor
+                result += 1 << i;//将结果加上2^n
+                t -= d << i;//将被除数减去2^n*divisor
+            }
+        }
+        return negative ? -result : result;//符号相异取反
+    }
+
+    /**
+     * 下一个排列
+     * 首先，我们观察到对于任何给定序列的降序，没有可能的下一个更大的排列。
+     *
+     * 例如，以下数组不可能有下一个排列：
+     *
+     * [9, 5, 4, 3, 1]
+     * 我们需要从右边找到第一对两个连续的数字 a[i]a[i] 和 a[i-1]a[i−1]，它们满足 a[i]>a[i-1]a[i]>a[i−1]。现在，没有对 a[i-1]a[i−1] 右侧的重新排列可以创建更大的排列，因为该子数组由数字按降序组成。因此，我们需要重新排列 a[i-1]a[i−1] 右边的数字，包括它自己。
+     *
+     * 现在，什么样子的重新排列将产生下一个更大的数字呢？我们想要创建比当前更大的排列。因此，我们需要将数字 a[i-1]a[i−1] 替换为位于其右侧区域的数字中比它更大的数字，例如 a[j]a[j]。
+     * 我们交换数字 a[i-1]a[i−1] 和 a[j]a[j]。我们现在在索引 i-1i−1 处有正确的数字。 但目前的排列仍然不是我们正在寻找的排列。我们需要通过仅使用 a[i-1]a[i−1]右边的数字来形成最小的排列。 因此，我们需要放置那些按升序排列的数字，以获得最小的排列。
+     * 但是，请记住，在从右侧扫描数字时，我们只是继续递减索引直到我们找到 a[i]a[i] 和 a[i-1]a[i−1] 这对数。其中，a[i] > a[i-1]a[i]>a[i−1]。因此，a[i-1]a[i−1] 右边的所有数字都已按降序排序。此外，交换 a[i-1]a[i−1] 和 a[j]a[j] 并未改变该顺序。因此，我们只需要反转 a[i-1]a[i−1] 之后的数字，以获得下一个最小的字典排列。
+     * @param nums
+     */
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 2;
+        while (i >= 0 && nums[i + 1] <= nums[i]) {
+            i--;
+        }
+        if (i >= 0) {
+            int j = nums.length - 1;
+            while (j >= 0 && nums[j] <= nums[i]) {
+                j--;
+            }
+            swap(nums, i , j);
+        }
+        reverse(nums, i + 1);
+    }
+
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+
+
+
+    public int strStr(String haystack, String needle) {
+        return haystack.indexOf(needle);
+    }
+
+
+    /**
+     * 搜索旋转排序数组，排序数组如 5678901234
+     * 先根据 nums[mid] 与 nums[lo] 的关系判断 mid 是在左段还是右段，接下来再判断 target 是在 mid 的左边还是右边，从而来调整左右边界 lo 和 hi
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int search(int[] nums, int target){
+        int low = 0, high = nums.length - 1, mid = 0;
+        while (low <= high){
+            mid = (low + high) / 2;
+            if (nums[mid] == target){
+                return mid;
+            }
+            //先根据nums[mid] 与 nums[low] 的关系判断 mid 是在左段还是右段
+            if (nums[mid] >= nums[low]){  //mid在左段
+                //再判断 target 是在 mid 的左边还是右边，从而调整左右边界 lo 和 hi
+                if (target >= nums[low] && target <= nums[mid]){  //mid在左，
+                    high = mid - 1;
+                }else {
+                    low = mid + 1;
+                }
+            }else {
+                if (target >= nums[mid] && target <= nums[high]){
+                    low = mid + 1;
+                }else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
+     *
+     * 你可以假设数组中无重复元素。
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while(left <= right) {
+            int mid =  left + (right - left)/2 ;
+            if(nums[mid] == target) {
+                return mid;
+            } else if(nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+
+
+    // 101/4
+    public static void main(String[] args) {
+//        System.out.println(new Main().divide(99,8));
+//        System.out.println((-1^-1));
+        System.out.println(101 >> 4);
     }
 
 
