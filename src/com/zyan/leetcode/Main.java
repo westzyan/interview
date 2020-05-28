@@ -1583,12 +1583,90 @@ public class Main {
         return left;
     }
 
+    /**
+     * 有效地数独
+     * 方法：一次迭代
+     * 首先，让我们来讨论下面两个问题：
+     *
+     * 如何枚举子数独？
+     * 可以使用 box_index = (row / 3) * 3 + columns / 3，其中 / 是整数除法。
+     * 用3个二维数组保存是否赋值了
+     * 主要是一次迭代，不用多次遍历
+     *
+     * @param board
+     * @return
+     */
+    public boolean isValidSudoku(char[][] board) {
+        int[][] row = new int[9][9];
+        int[][] col = new int[9][9];
+        int[][] box = new int[9][9];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] != '.'){
+                    int num = board[i][j] - '1'; //这里是为了在数组中正确存放从0开始
+                    int indexBox = (i / 3) * 3 + j / 3;
+                    if (row[i][num] == 1){
+                        return false;
+                    }else {
+                        row[i][num] = 1;
+                    }
+                    if (col[j][num] == 1){
+                        return false;
+                    }else {
+                        col[j][num] = 1;
+                    }
+                    if (box[indexBox][num] == 1){
+                        return false;
+                    }else {
+                        box[indexBox][num] = 1;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 外观数列
+     * @param n
+     * @return
+     */
+    public String countAndSay(int n) {
+        if (n == 1){
+            return "1";
+        }
+        String str = "1";
+        //大循环，n==？就循环几次
+        for (int i = 2; i <= n; i++) { //当n为2及以上时。因为下一个数列是对上面的解释。所以用三个变量，一个代表数量count ,一个代表前一个数字pre，一个代表后一个数字back
+            StringBuilder stringBuilder = new StringBuilder();
+            int count = 1;
+            char pre = str.charAt(0);//大循环下面pre作为首数字，因为必须从第一个开始往后循环
+            for (int j = 1; j < str.length() ; j++) {
+                char back = str.charAt(j);//后一个数字
+                if (back == pre){//相等count+1
+                    count++;
+                }else {
+                    stringBuilder.append(count).append(pre);
+                    //不等则append几个pre
+                    pre = back;
+                    count = 1;
+                }
+            }
+            stringBuilder.append(count).append(pre);//这一步是因为上层循环结束点在n-1的地方停了。并没有把最后的back加入到builder里面。并且观察数字，最后一位永远是1.所以可以直接把1个1加入到builder中。
+            str = stringBuilder.toString();
+        }
+        return str;
+    }
+
+
+
+
 
     // 101/4
     public static void main(String[] args) {
-//        System.out.println(new Main().divide(99,8));
+        System.out.println(new Main().countAndSay(5));
 //        System.out.println((-1^-1));
-        System.out.println(101 >> 4);
+//        System.out.println(101 >> 4);
     }
 
 
