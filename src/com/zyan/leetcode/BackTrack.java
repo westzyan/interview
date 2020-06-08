@@ -220,11 +220,214 @@ public class BackTrack {
     }
 
 
-    public static void main(String[] args) {
-        int[] nums = {2,3,5};
-        new BackTrack().combinationSum1(nums,8);
-        for (List<Integer> re : combinationRes) {
-            System.out.println(re);
+    /**
+     * 回溯法：全排列问题
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> permute1(int[] nums) {
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (len == 0){
+            return res;
         }
+        boolean[] used = new boolean[len];
+        List<Integer> path = new ArrayList<>();
+        permuteDFS(nums, len, 0, path, used, res);
+        return res;
+    }
+
+    private void permuteDFS(int[] nums, int len, int depth, List<Integer> path, boolean[] used, List<List<Integer>> res) {
+        if (depth == len){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            if (!used[i]){
+                path.add(nums[i]);
+                used[i] = true;
+                permuteDFS(nums, len, depth + 1, path, used, res);
+                used[i] = false;
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+
+    /**
+     * 全排列问题
+     * 给定一个可包含重复数字的序列，返回所有不重复的全排列。
+     *
+     * 示例:
+     *
+     * 输入: [1,1,2]
+     * 输出:
+     * [
+     *   [1,1,2],
+     *   [1,2,1],
+     *   [2,1,1]
+     * ]
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (len == 0){
+            return res;
+        }
+
+        Arrays.sort(nums);
+
+        boolean[] used = new boolean[len];
+
+        Deque<Integer> path = new ArrayDeque<>(len);
+        permuteUniqueDFS(nums, len, 0, used, path, res);
+        return res;
+    }
+
+    private void permuteUniqueDFS(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
+        if (depth == len){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            if (used[i]){
+                continue;
+            }
+            // 剪枝条件：i > 0 是为了保证 nums[i - 1] 有意义
+            // 写 !used[i - 1] 是因为 nums[i - 1] 在深度优先遍历的过程中刚刚被撤销选择
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]){
+                continue;
+            }
+            path.addLast(nums[i]);
+            used[i] = true;
+            permuteUniqueDFS(nums, len, depth + 1, used, path, res);
+            used[i] = false;
+            path.removeLast();
+        }
+    }
+
+    /**
+     * n皇后问题
+     * @param n
+     * @return
+     */
+    List<List<String>> queenRes = new LinkedList<>();
+    public List<List<String>> solveNQueens(int n) {
+        if (n < 0){
+            return null;
+        }
+        char[][] board = new char[n][n];
+        for (char[] chars : board) {
+            Arrays.fill(chars, '.');
+        }
+        queenBacktrack(board, 0);
+        return queenRes;
+    }
+    /**
+     * 路径：board中小于row的那些行都已经成功放置了皇后
+     * 可选择列表: 第row行的所有列都是放置Q的选择
+     * 结束条件: row超过board的最后一行
+     *
+     * @param board
+     * @param row
+     */
+    private void queenBacktrack(char[][] board, int row) {
+        if (row == board.length){
+            queenRes.add(charToString(board));
+            return;
+        }
+        int n = board[row].length;
+        for (int col = 0; col < n; col++) {
+            if (!isVilid(board, row, col)){
+                continue;
+            }
+            board[row][col] = 'Q';
+            queenBacktrack(board, row + 1);
+            board[row][col] = '.';
+        }
+    }
+    //是否可以在 board[row][col] 放置皇后？
+    //因为下方的行还没有轮到，所以只需要判断该位置的上方，以及左上方，右上方是否已经放置了皇后，
+    // 如果放过了，那么这个位置就不能再放了
+    private boolean isVilid(char[][] board, int row, int col){
+        int rows = board.length;
+        // check is valid in col
+        for (char[] chars : board) {
+            if (chars[col] == 'Q'){
+                return false;
+            }
+        }
+        // check is valide upright
+        for (int i = row - 1, j = col + 1; i >= 0 && j < rows ; i--, j++) {
+            if (board[i][j] == 'Q'){
+                return false;
+            }
+        }
+        // check is valide upleft
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 'Q'){
+                return false;
+            }
+        }
+        return true;
+    }
+    private List<String> charToString(char[][] array){
+        List<String> result = new LinkedList<>();
+        for (char[] chars : array) {
+            result.add(String.valueOf(chars));
+        }
+        return result;
+    }
+
+    public String getPermutation(int n, int k) {
+        boolean[] used = new boolean[n +1];
+        Arrays.fill(used, false);
+
+        //计算阶乘数组
+        int[] factorial = new int[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            factorial[i] = factorial[i - 1] * i;
+        }
+
+        List<Integer> path = new ArrayList<>(n);
+
+        getPermutationDFS(0, n, k, factorial, used, path);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer integer : path) {
+            stringBuilder.append(integer);
+        }
+        return stringBuilder.toString();
+    }
+
+    private void getPermutationDFS(int index, int n, int k, int[] factorial, boolean[] used, List<Integer> path) {
+        if (index == n){
+            return;
+        }
+
+        //还未确定的数字的全排列的个数，第一次进入的时候是n-1
+        int cnt = factorial[n - 1 - index];
+        for (int i = 1; i <= n ; i++) {
+            if (used[i]){
+                continue;
+            }
+            if (cnt < k){
+                k = k - cnt;
+                continue;
+            }
+            path.add(i);
+            used[i] = true;
+            getPermutationDFS(index + 1, n, k, factorial, used, path);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+        BackTrack solution = new BackTrack();
+        List<List<Integer>> lists = solution.permute(nums);
+        System.out.println(lists);
     }
 }
