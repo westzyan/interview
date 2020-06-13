@@ -380,6 +380,7 @@ public class BackTrack {
         return result;
     }
 
+    //借助“回溯”方法中的“剪枝”技巧
     public String getPermutation(int n, int k) {
         boolean[] used = new boolean[n +1];
         Arrays.fill(used, false);
@@ -403,7 +404,7 @@ public class BackTrack {
     }
 
     private void getPermutationDFS(int index, int n, int k, int[] factorial, boolean[] used, List<Integer> path) {
-        if (index == n){
+        if (index == n){//触发出口条件，开始收集结果集
             return;
         }
 
@@ -419,10 +420,37 @@ public class BackTrack {
             }
             path.add(i);
             used[i] = true;
-            getPermutationDFS(index + 1, n, k, factorial, used, path);
+            getPermutationDFS(index + 1, n, k, factorial, used, path);//这里到了根节点就结束了，借助了回溯思想
         }
     }
 
+    public void nextPermutation(int[] nums){
+        int i = nums.length - 2;
+        while (i >= 0 && nums[i] < nums[i + 1]){
+            i--;
+        }
+        if (i >= 0){
+            int j = nums.length - 1;
+            while (j >= 0 && nums[j] <= nums[i]){
+                j--;
+            }
+            swap(nums, i, j);
+        }
+        reverse(nums, i + 1);
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
 
     public static void main(String[] args) {
         int[] nums = {1, 2, 3};

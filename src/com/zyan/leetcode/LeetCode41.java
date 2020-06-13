@@ -1,5 +1,7 @@
 package com.zyan.leetcode;
 
+import java.util.*;
+
 public class LeetCode41 {
 
 
@@ -385,9 +387,632 @@ public class LeetCode41 {
         return steps;
     }
 
+    //旋转图像
+    //给定一个 n × n 的二维矩阵表示一个图像。
+    //
+    //将图像顺时针旋转 90 度。
+    //
+    //说明：
+    //
+    //你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+    //
+    //示例 1:
+    //
+    //给定 matrix =
+    //[
+    //  [1,2,3],
+    //  [4,5,6],
+    //  [7,8,9]
+    //],
+    //
+    //原地旋转输入矩阵，使其变为:
+    //[
+    //  [7,4,1],
+    //  [8,5,2],
+    //  [9,6,3]
+    //]
+    public void rotate(int[][] matrix) {
+        if (matrix.length == 0){
+            return;
+        }
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = tmp;
+            }
+        }
+        System.out.println(Arrays.deepToString(matrix));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = tmp;
+            }
+        }
+        System.out.println(Arrays.deepToString(matrix));
+    }
+
+    public void rotate1(int[][] matrix) {
+        int n = matrix.length;
+
+        // transpose matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int tmp = matrix[j][i];
+                matrix[j][i] = matrix[i][j];
+                matrix[i][j] = tmp;
+            }
+        }
+        System.out.println(Arrays.deepToString(matrix));
+        // reverse each row
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = tmp;
+            }
+        }
+        System.out.println(Arrays.deepToString(matrix));
+    }
+
+    /**
+     *  字母异位词分组
+     *  给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     *
+     * 示例:
+     *
+     * 输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
+     * 输出:
+     * [
+     *   ["ate","eat","tea"],
+     *   ["nat","tan"],
+     *   ["bat"]
+     * ]
+     * @param strs
+     * @return
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs.length == 0){
+            return new ArrayList<>();
+        }
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            if (map.containsKey(String.valueOf(chars))){
+                map.get(String.valueOf(chars)).add(str);
+            }else {
+                map.put(str,new ArrayList<String>());
+                map.get(String.valueOf(chars)).add(str);
+            }
+        }
+        return new ArrayList<>(map.values());
+    }
+
+
+    /**
+     * 螺旋矩阵
+     * 给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
+     *
+     * 示例 1:
+     *
+     * 输入:
+     * [
+     *  [ 1, 2, 3 ],
+     *  [ 4, 5, 6 ],
+     *  [ 7, 8, 9 ]
+     * ]
+     * 输出: [1,2,3,6,9,8,7,4,5]
+     * @param matrix
+     * @return
+     */
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> list = new ArrayList<>();
+        if (matrix.length == 0){
+            return list;
+        }
+        int up = 0;
+        int down = matrix.length - 1;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        while (true){
+            // 最上面一行
+            for (int col = left; col <=right ; col++) {
+                list.add(matrix[up][col]);
+            }
+            // 向下逼近
+            up++;
+            // 判断是否越界
+            if (up > down) {
+                break;
+            }
+            // 最右边一行
+            for (int row = up; row <= down ; row++) {
+                list.add(matrix[row][right]);
+            }
+            right--;
+            if (right < left){
+                break;
+            }
+            for (int col = right; col >= left ; col--) {
+                list.add(matrix[down][col]);
+            }
+            // 向上逼近
+            down--;
+            // 判断是否越界
+            if (up > down) {
+                break;
+            }
+            // 最左边一行
+            for (int row = down; row >= up; row--) {
+                list.add(matrix[row][left]);
+            }
+            // 向右逼近
+            left++;
+            // 判断是否越界
+            if (left > right) {
+                break;
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * 跳跃游戏
+     * 给定一个非负整数数组，你最初位于数组的第一个位置。
+     *
+     * 数组中的每个元素代表你在该位置可以跳跃的最大长度。
+     *
+     * 判断你是否能够到达最后一个位置。
+     *
+     * 示例 1:
+     *
+     * 输入: [2,3,1,1,4]
+     * 输出: true
+     * 解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
+     *
+     * 解题思路：
+     * 如果某一个作为 起跳点 的格子可以跳跃的距离是 3，那么表示后面 3 个格子都可以作为 起跳点。
+     * 可以对每一个能作为 起跳点 的格子都尝试跳一次，把 能跳到最远的距离 不断更新。
+     * 如果可以一直跳到最后，就成功了。
+     * 方  法所依据的核心特性：如果一个位置能够到达，那么这个位置左侧所有位置都能到达。
+     * @param nums
+     * @return
+     */
+    public boolean canJump(int[] nums) {
+        int k = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > k){
+                return false;
+            }
+            k = Math.max(k, i + nums[i]);
+        }
+        return true;
+    }
+
+    /**
+     * 区间合并问题
+     * 给出一个区间的集合，请合并所有重叠的区间。
+     *
+     * 示例 1:
+     *
+     * 输入: [[1,3],[2,6],[8,10],[15,18]]
+     * 输出: [[1,6],[8,10],[15,18]]
+     * 解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+     *可以被合并的区间一定是有交集的区间，前提是区间按照左端点排好序，这里的交集可以是一个点（例如例 2）。
+     *
+     * 至于为什么按照左端点升序排序，这里要靠一点直觉猜想，我没有办法说清楚是怎么想到的，有些问题的策略是按照右端点升序排序（也有可能是降序排序，具体问题具体分析）。
+     *
+     * 接着说，直觉上，只需要对所有的区间按照左端点升序排序，然后遍历。
+     *
+     * 如果当前遍历到的区间的左端点 > 结果集中最后一个区间的右端点，说明它们没有交集，此时把区间添加到结果集；
+     * 如果当前遍历到的区间的左端点 <= 结果集中最后一个区间的右端点，说明它们有交集，此时产生合并操作，即：对结果集中最后一个区间的右端点更新（取两个区间的最大值）。
+     * @param intervals
+     * @return
+     */
+    public int[][] merge(int[][] intervals) {
+        int len = intervals.length;
+        if (len < 2){
+            return intervals;
+        }
+
+        //按照起点排序
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+
+        // 也可以使用 Stack，因为我们只关心结果集的最后一个区间
+        List<int[]> res = new ArrayList<>();
+        res.add(intervals[0]);
+
+        for (int i = 1; i < len ; i++) {
+            int[] cur = intervals[i];
+            // 每次新遍历到的列表与当前结果集中的最后一个区间的末尾端点进行比较
+            int[] peek = res.get(res.size() - 1);
+            if (cur[0] > peek[1]){
+                res.add(cur);
+            }else {
+                // 注意，这里应该取最大
+                peek[1] = Math.max(cur[1],peek[1]);
+            }
+        }
+        return res.toArray(new int[res.size()][]);
+    }
+
+    /**
+     * 最后一个单词的长度
+     * @param s
+     * @return
+     */
+    public int lengthOfLastWord(String s){
+        int end = s.length() - 1;
+        while (end >= 0 && s.charAt(end) == ' '){
+            end--;
+        }
+        if (end < 0){
+            return 0;
+        }
+        int start = end;
+        while (start>=0 && s.charAt(start) != ' '){
+            start--;
+        }
+        return end - start;
+    }
+
+    /**
+     * 螺旋矩阵2
+     * 给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+     *
+     * 示例:
+     *
+     * 输入: 3
+     * 输出:
+     * [
+     *  [ 1, 2, 3 ],
+     *  [ 8, 9, 4 ],
+     *  [ 7, 6, 5 ]
+     * ]
+     *
+     */
+    public int[][] generateMatrix(int n) {
+        if (n == 0){
+            return null;
+        }
+        int[][] mat = new int[n][n];
+        int up = 0;
+        int down = n - 1;
+        int left = 0;
+        int right = n - 1;
+        int num = 1;
+        while (num <= n * n){
+            for (int i = left; i <= right ; i++) {
+                mat[up][i] = num;
+                num++;
+            }
+            up++;
+            for (int i = up; i <= down ; i++) {
+                mat[i][right] = num;
+                num++;
+            }
+            right--;
+            for (int i = right; i >= left ; i--) {
+                mat[down][i] = num;
+                num++;
+            }
+            down--;
+            for (int i = down; i >= up ; i--) {
+                mat[i][left] = num;
+                num++;
+            }
+            left++;
+        }
+        return mat;
+    }
+
+    /**
+     * 下一个排列
+     * @param n
+     * @param k
+     * @return
+     */
+    public String getPermutation(int n, int k) {
+        boolean[] used = new boolean[n + 1];
+        int[] factorial = new int[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i <= n ; i++) {
+            factorial[i] = factorial[i- 1] * i;
+        }
+        List<Integer> path = new ArrayList<>();
+        getPermutationDFS(0, n, k,factorial, used , path);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer integer : path) {
+            stringBuilder.append(integer);
+        }
+        return stringBuilder.toString();
+
+    }
+    private void getPermutationDFS(int index, int n, int k, int[] factorial, boolean[] used, List<Integer> path) {
+        if (index == n){
+            return;
+        }
+        int cnt = factorial[n - 1 - index];
+        for (int i = 1; i <= n ; i++) {
+            if (used[i]){
+                continue;
+            }
+            if (cnt < k){
+                k = k - cnt;
+                continue;
+            }
+            path.add(i);
+            used[i] = true;
+            getPermutationDFS(index + 1, n, k, factorial, used, path);
+        }
+    }
+
+    /**
+     * 旋转链表
+     * 给定一个链表，旋转链表，将链表每个节点向右移动 k 个位置，其中 k 是非负数。
+     *
+     * 示例 1:
+     *
+     * 输入: 1->2->3->4->5->NULL, k = 2
+     * 输出: 4->5->1->2->3->NULL
+     * 解释:
+     * 向右旋转 1 步: 5->1->2->3->4->NULL
+     * 向右旋转 2 步: 4->5->1->2->3->NULL
+     * 思路，连接成环，再截断
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null){
+            return head;
+        }
+        ListNode oldTail = head;
+        int n;
+        for (n = 1; oldTail.next != null; n++) {
+            oldTail = oldTail.next;
+        }
+        oldTail.next = head;
+
+        ListNode newTail = head;
+        for (int i = 0; i < n - k % n - 1 ; i++) {
+            newTail = newTail.next;
+        }
+        ListNode newHead = newTail.next;
+
+        newTail.next = null;
+        return newHead;
+    }
+
+
+    //解决不同路径问题
+    //一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+    //
+    //机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+    //
+    //问总共有多少条不同的路径？
+    // 多计算方法
+    public int uniquePaths(int m, int n){
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = 1;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n ; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m -1][n - 1];
+    }
+    /**
+     * 因为在这里面每个点的路径都是这个点的 上一个点的路径数 + 左边点的路径数 ，因此只要将上一行和本行的数值记录下来就能推导目标点的
+     * 路径数，可以将空间复杂度由 O(m * n) 优化为 O(2n)
+     *
+     * @param m -
+     * @param n -
+     * @return -
+     */
+    public int uniquePaths2(int m, int n) {
+        int[] preLine = new int[n];
+        int[] curLine = new int[n];
+        Arrays.fill(preLine, 1);
+        Arrays.fill(curLine, 1);
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                curLine[j] = preLine[j] + curLine[j - 1];
+            }
+            preLine = curLine.clone();
+        }
+        return curLine[n - 1];
+    }
+
+    /**
+     * 从解法二可以看出，我们求一个点需要的是它头上的那个点和它本行左边的那个点，只要有这两个点，那么就能够计算出当前点
+     * 所以可以直接将两行数据优化为一行，每次循环都会提前计算它左边的点，这个左边的点就可以理解成本行左边的那个点，而因为
+     * 当前点还未进行计算，这个位置上实际存储的数据是它头上的那个点（上一行）的数据，因此空间复杂度优化为O(n)
+     *
+     * @param m -
+     * @param n -
+     * @return -
+     */
+    public int uniquePaths3(int m, int n) {
+        int[] arr = new int[n];
+        Arrays.fill(arr, 1);
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                arr[j] += arr[j - 1];
+            }
+        }
+        return arr[n - 1];
+    }
+
+
+    //不同路径
+    //一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+    //
+    //机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+    //
+    //现在考虑网格中有障碍物。那么从左上角到右下角将会有多少条不同的路径？
+    //说明：m 和 n 的值均不超过 100。
+    //
+    //示例 1:
+    //
+    //输入:
+    //[
+    //  [0,0,0],
+    //  [0,1,0],
+    //  [0,0,0]
+    //]
+    //输出: 2
+    //解释:
+    //3x3 网格的正中间有一个障碍物。
+    //从左上角到右下角一共有 2 条不同的路径：
+    //1. 向右 -> 向右 -> 向下 -> 向下
+    //2. 向下 -> 向下 -> 向右 -> 向右
+
+
+    //事实上，这道题和上一道题类似，唯一的区别在于中间可能有障碍物，那么就把有障碍物的点视为不可达，不可达的意思就是没有路径（0条路径）可以到达当前点，这里用dp[i[[j]=0表示不可达。
+    //
+    //初始化第一行和第一列，障碍物后面都不可达
+    //填充dp数组，分三种情况：
+    //上边的点和左边的点都不可达，那么当前点不可达:dp[i][j] = 0
+    //当前点是障碍物，那么当前点不可达:dp[i][j] = 0
+    //上边的点或者左边的点可达，那么当前点就可达，路径数等于到上边点的路径数加到左边点的路径数:dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+    //事实上第一种情况和第三种情况是可以合并的，因为 上边的点和左边的点都不可达，那么当前点还是可以表示为dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid.length < 1)
+            return 0;
+        if (obstacleGrid[0].length < 1)
+            return 0;
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+
+        int[][] dp = new int[obstacleGrid.length][obstacleGrid[0].length];
+
+        //边界处理，注意如果遇到了障碍，后面的点的路径数就都为0，要break
+        for (int i=0; i<m; i++){
+            if (obstacleGrid[i][0] == 1) break;
+            dp[i][0] = 1;
+        }
+        //边界处理，注意如果遇到了障碍，后面的点的路径数就都为0，要break
+        for (int i=0; i<n; i++){
+            if (obstacleGrid[0][i] == 1) break;
+            dp[0][i] = 1;
+        }
+
+        for (int i=1; i<m; i++){
+            for (int j=1; j<n; j++) {
+                if (obstacleGrid[i][j] == 1)  continue; //如果这个点是障碍，则跳过，dp[i][j] = 0
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m-1][n-1];
+
+    }
+
+    //直接初始化的方法
+    public int uniquePathsWithObstacles1(int[][] obstacleGrid) {
+        if (obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        obstacleGrid[0][0] = 1;
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        for (int i = 1; i < n; i++) {
+            obstacleGrid[0][i] = (obstacleGrid[0][i] == 0 && obstacleGrid[0][i - 1] == 1) ? 1 : 0;
+        }
+        for (int i = 1; i < m; i++) {
+            obstacleGrid[i][0] = (obstacleGrid[i][0] == 0 && obstacleGrid[i - 1][0] == 1) ? 1 : 0;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 0) {
+                    obstacleGrid[i][j] = obstacleGrid[i][j - 1] + obstacleGrid[i - 1][j];
+                } else {
+                    obstacleGrid[i][j] = 0;
+                }
+            }
+        }
+        return obstacleGrid[m - 1][n - 1];
+    }
+
+
+    /**
+     * 最小路径和
+     * 给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+     *
+     * 说明：每次只能向下或者向右移动一步。
+     *
+     * 示例:
+     *
+     * 输入:
+     * [
+     *   [1,3,1],
+     *   [1,5,1],
+     *   [4,2,1]
+     * ]
+     * 输出: 7
+     * 解释: 因为路径 1→3→1→1→1 的总和最小。
+     *
+     * 解题思路
+     * 1、dp定义：dp[i][j]代表从grid[0][0]-grid[i][j]的最小路径和
+     * 2、初始状态：dp[0][0] = grid[0][0], dp[0][j] = sum(grid[0][0-j]), dp[i][0] = sum(grid[0-i][0])
+     * 3、状态方程：dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+     * 4、所求答案：dp[grid.length - 1][grid[0].length - 1]
+     * @param grid
+     * @return
+     */
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if (m == 0 || n == 0){
+            return 0;
+        }
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+        }
+        for (int i = 1; i < n; i++) {
+            dp[0][i] = dp[0][i - 1] + grid[0][i];
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
 
     public static void main(String[] args) {
-        System.out.println(new LeetCode41().multiply("555", "1199999"));
+//        System.out.println(new LeetCode41().multiply("555", "1199999"));
+//        int[][] mat = {
+//                {1,2,3},
+//                {4,5,6},
+//                {7,8,9}
+//        };
+//        int[][] mat1 = {
+//                {1,2,3},
+//                {4,5,6},
+//                {7,8,9}
+//        };
+//        new LeetCode41().rotate(mat);
+//        new LeetCode41().rotate1(mat1);
+        System.out.println(new LeetCode41().lengthOfLastWord("deee"));
     }
 
 }
