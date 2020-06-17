@@ -519,6 +519,307 @@ public class DP {
         return dp[s1.length][s2.length];
     }
 
+    /**
+     * 最长回文子序列
+     * 给定一个字符串 s ，找到其中最长的回文子序列，并返回该序列的长度。可以假设 s 的最大长度为 1000 。
+     *
+     *  
+     *
+     * 示例 1:
+     * 输入:
+     *
+     * "bbbab"
+     * 输出:
+     *
+     * 4
+     * 一个可能的最长回文子序列为 "bbbb"。
+     * 我们说这个问题对 dp 数组的定义是：在子串 s[i..j] 中，最长回文子序列的长度为 dp[i][j]。一定要记住这个定义才能理解算法。
+     * 具体来说，如果我们想求 dp[i][j]，假设你知道了子问题 dp[i+1][j-1] 的结果（s[i+1..j-1] 中最长回文子序列的长度），
+     * 你是否能想办法算出 dp[i][j] 的值（s[i..j] 中，最长回文子序列的长度）呢？
+     * 以上两种情况写成代码就是这样：
+     * if (s[i] == s[j])
+     *     // 它俩一定在最长回文子序列中
+     *     dp[i][j] = dp[i + 1][j - 1] + 2;
+     * else
+     *     // s[i+1..j] 和 s[i..j-1] 谁的回文子序列更长？
+     *     dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+     * 至此，状态转移方程就写出来了，根据 dp 数组的定义，我们要求的就是 dp[0][n - 1]，也就是整个 s 的最长回文子序列的长度。
+     *
+     * 首先明确一下 base case，如果只有一个字符，显然最长回文子序列长度是 1，也就是 dp[i][j] = 1 (i == j)。
+     * 因为 i 肯定小于等于 j，所以对于那些 i > j 的位置，根本不存在什么子序列，应该初始化为 0。
+     * 另外，看看刚才写的状态转移方程，想求 dp[i][j] 需要知道 dp[i+1][j-1]，dp[i+1][j]，dp[i][j-1] 这三个位置；再看看我们确定的 base case，填入 dp 数组之后是这样：
+     * 反着遍历
+     * @param s -
+     * @return -
+     */
+    public int longestPalindromeSubseq(String s) {
+        if (s.length() <= 1){
+            return s.length();
+        }
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        //斜着的一列设置为1，代表初始化操作
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = 1;
+        }
+
+        //反着遍历保证正确的状态转移
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i + 1; j < n; j++) {
+                if (s.charAt(i) == s.charAt(j)){
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                }else {
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+
+    /**
+     * 正则表达式
+     * 给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+     *
+     * '.' 匹配任意单个字符
+     * '*' 匹配零个或多个前面的那一个元素
+     * 所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+     *
+     * 说明:
+     *
+     * s 可能为空，且只包含从 a-z 的小写字母。
+     * p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
+     * 示例 1:
+     *
+     * 输入:
+     * s = "aa"
+     * p = "a"
+     * 输出: false
+     * 解释: "a" 无法匹配 "aa" 整个字符串。
+     * @param text -
+     * @param pattern -
+     * @return -
+     */
+    public boolean isMatch1(String text, String pattern) {
+        if (pattern.isEmpty()){
+            return text.isEmpty();
+        }
+        boolean firstMatch = (!text.isEmpty() && pattern.charAt(0) == text.charAt(0) || pattern.charAt(0) == '.'); //首字母相同或者pattern是点号
+        if (pattern.length() >= 2 && pattern.charAt(1) == '*'){
+            //    如果发现有字符和 '*' 结合，
+            //    # 或者匹配该字符 0 次，然后跳过该字符和 '*'
+            //    # 或者当 pattern[0] 和 text[0] 匹配后，移动 text
+            return (isMatch1(text, pattern.substring(2)) || (firstMatch && isMatch1(text.substring(1), pattern)));
+        }else {
+            return firstMatch && isMatch1(text.substring(1), pattern.substring(1));
+        }
+    }
+    //自底向上的方法
+    //dp(i,j) 表示 text[i:] 和 pattern[j:]是否能匹配
+    //所以最终求的是dp[0][0]
+    public boolean isMatch2(String text, String pattern) {
+        boolean[][] dp = new boolean[text.length() + 1][pattern.length() + 1];
+        dp[text.length()][pattern.length()] = true;
+        for (int i = text.length(); i >= 0 ; i--) {
+            for (int j = pattern.length() - 1; j >= 0 ; j--) {
+                boolean firstMatch = (i < text.length()) && (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.');
+                if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*'){
+                    dp[i][j] = dp[i][j + 2] || firstMatch && dp[i + 1][j];
+                }else {
+                    dp[i][j] = firstMatch && dp[i + 1][j + 1];
+                }
+            }
+        }
+        return dp[0][0];
+    }
+
+    /**
+     * 买卖股票的最佳时机
+     * 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+     *
+     * 如果你最多只允许完成一笔交易（即买入和卖出一支股票一次），设计一个算法来计算你所能获取的最大利润。
+     *
+     * 注意：你不能在买入股票前卖出股票。
+     *
+     *  
+     *
+     * 示例 1:
+     *
+     * 输入: [7,1,5,3,6,4]
+     * 输出: 5
+     * 解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     *      注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+     * 示例 2:
+     *
+     * 输入: [7,6,4,3,1]
+     * 输出: 0
+     * 解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+     * @param prices -
+     * @return -
+     */
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int dp_i_0 = 0;
+        int dp_i_1 = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+            dp_i_1 = Math.max(dp_i_1, -prices[i]);
+        }
+        return dp_i_0;
+    }
+
+    /**
+     * 暴力方法
+     * @param prices
+     * @return
+     */
+    public int maxProfit1(int prices[]) {
+        int maxprofit = 0;
+        for (int i = 0; i < prices.length - 1; i++) {
+            for (int j = i + 1; j < prices.length; j++) {
+                int profit = prices[j] - prices[i];
+                if (profit > maxprofit)
+                    maxprofit = profit;
+            }
+        }
+        return maxprofit;
+    }
+
+    /**
+     * 一次遍历法
+     * 在题目中，我们只要用一个变量记录一个历史最低价格 minprice，我们就可以假设自己的股票是在那天买的。那么我们在第 i 天卖出股票能得到的利润就是 prices[i] - minprice。
+     *
+     * 因此，我们只需要遍历价格数组一遍，记录历史最低点，然后在每一天考虑这么一个问题：如果我是在历史最低点买进的，那么我今天卖出能赚多少钱？当考虑完所有天数之时，我们就得到了最好的答案
+     * 假如计划在第 i 天卖出股票，那么最大利润的差值一定是在[0, i-1] 之间选最低点买入；所以遍历数组，依次求每个卖出时机的的最大差值，再从中取最大值。
+     * @param prices -
+     * @return -
+     */
+    public int maxProfit2(int prices[]) {
+        int minPrice = Integer.MAX_VALUE;
+        int minProfit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < minPrice){
+                minPrice = prices[i];
+            }else if (prices[i] - minPrice > minProfit){
+                minProfit = prices[i] - minPrice;
+            }
+        }
+        return minProfit;
+    }
+
+    /**
+     * 如果 k 为正无穷，那么就可以认为 k 和 k - 1 是一样的。可以这样改写框架：
+     * dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+     * dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+     *             = max(dp[i-1][k][1], dp[i-1][k][0] - prices[i])
+     *
+     * 我们发现数组中的 k 已经不会改变了，也就是说不需要记录 k 这个状态了：
+     * dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i])
+     * dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i])
+     * 其实还有一次遍历法，即将所有的上升线段全都记录在一起，加到一块，就是结果，一次遍历
+     * @param prices -
+     * @return -
+     */
+    public int maxProfit_k_inf(int[] prices) {
+        int n = prices.length;
+        int dp_i_0 = 0, dp_i_1 = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+//            int temp = dp_i_0;
+            dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+            dp_i_1 = Math.max(dp_i_1, dp_i_0 - prices[i]);
+        }
+        return dp_i_0;
+    }
+
+    public int maxProfit_k_inf1(int[] prices) {
+        int maxprofit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1])
+                maxprofit += prices[i] - prices[i - 1];
+        }
+        return maxprofit;
+    }
+
+    /**
+     * 每次交易需要等待一天 冷冻期
+     * 状态转移方程
+     * dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i])
+     * dp[i][1] = max(dp[i-1][1], dp[i-2][0] - prices[i])
+     * 解释：第 i 天选择 buy 的时候，要从 i-2 的状态转移，而不是 i-1 。
+     * @param prices -
+     * @return -
+     */
+    public int maxProfitWithCool(int[] prices){
+        int n = prices.length;
+        int dp_i_0 = 0, dp_i_1 = Integer.MIN_VALUE;
+        int dp_pre_0 = 0; //代表dp[i-2][0]
+        for (int i = 0; i < n; i++) {
+            int temp = dp_i_0;
+            dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+            dp_i_1 = Math.max(dp_i_1, dp_pre_0 - prices[i]);
+            dp_pre_0 = temp;
+        }
+        return dp_i_0;
+    }
+
+    /**
+     * 需要交易费用
+     * @param prices -
+     * @param fee -
+     * @return -
+     */
+    public int maxProfitWithFee(int[] prices, int fee){
+        int n = prices.length;
+        int dp_i_0 = 0, dp_i_1 = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            int temp = dp_i_0;
+            dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+            dp_i_1 = Math.max(dp_i_1, temp - prices[i] - fee);
+        }
+        return dp_i_0;
+    }
+
+    /**
+     * K = 2
+     *         int k = 2;
+     *         int[][][] dp = new int[n][k + 1][2];
+     *         for (int i = 0; i < n; i++)
+     *             if (i - 1 == -1) {  处理一下 base case }
+     *             dp[i][k][0] = Math.max(dp[i-1][k][0], dp[i-1][k][1] + prices[i]);
+     *             dp[i][k][1] = Math.max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i]);
+     *         }
+     *         return dp[n - 1][k][0];
+     * @param prices -
+     * @return -
+     */
+    public int maxProfit_k_2(int[] prices) {
+        int dp_i10 = 0, dp_i11 = Integer.MIN_VALUE;
+        int dp_i20 = 0, dp_i21 = Integer.MIN_VALUE;
+        for (int price : prices) {
+            dp_i20 = Math.max(dp_i20, dp_i21 + price);
+            dp_i21 = Math.max(dp_i21, dp_i10 - price);
+            dp_i10 = Math.max(dp_i10, dp_i11 + price);
+            dp_i11 = Math.max(dp_i11, -price);
+        }
+        return dp_i20;
+    }
+
+    /**
+     * 打家劫舍问题
+     * 自顶向下设计
+     * @param nums -
+     * @return -
+     */
+    public int rob(int[] nums){
+        int n = nums.length;
+        int[] dp = new int[n + 2];
+        for (int i = n - 1; i >= 0 ; i--) {
+            dp[i] = Math.max(dp[i + 1], nums[i] + dp[i + 2]);
+        }
+        return dp[0];
+    }
+
+
+
 
 
 
@@ -528,7 +829,9 @@ public class DP {
         int[] val = {4, 2, 3};
 //        System.out.println(new DP().packet01(w,n,wt,val));
         //System.out.println(new DP().minDistance("werdffasdjfkl","fdsafjflsadk"));
-        System.out.println(new DP().superEggDrop(3, 9));
+//        System.out.println(new DP().superEggDrop(3, 9));
+//        System.out.println(new DP().longestPalindromeSubseq("fasdflkjfdsa"));
+        System.out.println(new DP().maxProfitWithFee(new int[]{1,3,8,2,9,4,6},5));;
     }
 
 
