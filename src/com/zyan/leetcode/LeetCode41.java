@@ -998,21 +998,319 @@ public class LeetCode41 {
         return dp[m - 1][n - 1];
     }
 
+    /**
+     * 根据题意加一，没错就是加一这很重要，因为它是只加一的所以有可能的情况就只有两种：
+     *
+     * 除 99 之外的数字加一；
+     * 数字 99。
+     * 加一得十进一位个位数为 00 加法运算如不出现进位就运算结束了且进位只会是一。
+     *
+     * 所以只需要判断有没有进位并模拟出它的进位方式，如十位数加 11 个位数置为 00，如此循环直到判断没有再进位就退出循环返回结果。
+     *
+     * 然后还有一些特殊情况就是当出现 9999、999999 之类的数字时，循环到最后也需要进位，出现这种情况时需要手动将它进一位。
+     *
+     * @param digits -
+     * @return -
+     */
+    public int[] plusOne(int[] digits){
+        if (digits[digits.length - 1] < 9){
+            digits[digits.length - 1] += 1;
+            return digits;
+        }
+        for (int i = digits.length - 1; i >= 0 ; i--) {
+            digits[i]++;
+            digits[i] = digits[i] % 10;
+            if (digits[i] != 0){
+                return digits;
+            }
+        }
+        digits = new int[digits.length + 1];
+        digits[0] = 1;
+        return digits;
+    }
+
+    /**
+     * 二进制求和
+     * 内置函数办法
+     * @param a -
+     * @param b -
+     * @return -
+     */
+    public String addBinary(String a, String b) {
+        return Integer.toBinaryString(Integer.parseInt(a,2) + Integer.parseInt(b, 2));
+    }
+    //位运算
+    public String addBinary1(String a, String b) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int radix = 2;
+        int length1 = a.length();
+        int length2 = b.length();
+        int carry = 0;
+        while (length1 > 0 || length2 > 0){
+            int val1 = length1 > 0 ? a.charAt(length1 - 1) - '0' : 0;
+            int val2 = length2 > 0 ? b.charAt(length2 - 1) - '0' : 0;
+            int sum = (val1 + val2 + carry) % radix;
+            stringBuilder.append(sum);
+            carry = (val1 + val2 + carry) / 2;
+            length1--;
+            length2--;
+        }
+        stringBuilder.append(carry == 0 ? "" : carry);
+        return stringBuilder.reverse().toString();
+    }
+
+    /**
+     * 求一个数的平方根
+     * 方法一：二分法
+     * @param x -
+     * @return -
+     */
+    public int mySqrt(int x) {
+        int l = 0, r = x, ans = -1;
+        while (l <= r){
+            int mid = l + (r - l) / 2;
+            if ((long) mid * mid <= x){
+                ans = mid;
+                l = mid + 1;
+            }else {
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    // 牛顿迭代法
+    public int mySqrt1(int x) {
+        if (x == 0){
+            return 0;
+        }
+
+        double C = x, x0 = x;
+        while (true){
+            double xi = 0.5 * (x0 + C / x0);
+            if (Math.abs(x0 - xi) < 1e-7){
+                break;
+            }
+            x0 = xi;
+        }
+        return (int)x0;
+    }
+
+    //尝试求三次方根
+    public double mySqrt3(double x) {
+        if (x == 0 || x == 1 || x == -1){
+            return x;
+        }
+        double l = x > 0 ? 0 : x;
+        double r = x > 0 ? x : 0;
+        double mid = l + (r - l) / 2;
+
+        while (r - l > 1e-7){
+            if (mid * mid * mid > x){
+                r = mid;
+            }else {
+                l = mid;
+            }
+            mid = l + (r - l) / 2;
+        }
+        return mid;
+    }
+
+    /**
+     * 爬楼梯
+     * @param n
+     * @return
+     */
+    public int climbStairs(int n) {
+        if (n < 3){
+            return n;
+        }
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n ; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+
+    public int climbStairs1(int n) {
+        if (n < 3){
+            return n;
+        }
+        int pre = 1, preOfPre = 1, cur = 1;
+        for(int i = 2; i <= n; i++) {
+            cur = pre + preOfPre;
+            preOfPre = pre;
+            pre = cur;
+        }
+        return cur;
+    }
+
+    /**
+     * 简化路径，unix路径
+     * @param path
+     * @return
+     */
+    public String simplifyPath(String path) {
+        Stack<String> stack = new Stack<>();
+        String[] str = path.split("/");
+        for (String s : str) {
+            if (s.equals("..")){
+                if (!stack.isEmpty()){
+                    stack.pop();
+                }
+            }else if (!s.equals("") && !s.equals(".")){
+                stack.push(s);
+            }
+        }
+        if (stack.isEmpty()){
+            return "/";
+        }
+        StringBuilder ans = new StringBuilder();
+        for (String s : stack) {
+            ans.append("/").append(s);
+        }
+        return ans.toString();
+    }
+
+    /**
+     * 1.此题主要考察的是栈,所以定义一个辅助栈;
+     * 2.先把字符串以"/"为分隔符分割成数组,此时数组有"路径"、""、"."、".."这四种情况;
+     * 3.遍历数组,当s[i].equals("..")并且栈不空时pop,当!s[i].equals("") && !s[i].equals(".") && !s[i].equals(".."),即s[i]是路径入栈;
+     * 4.栈空,返回"/",栈非空,用StringBuffer做一个连接返回即可;
+     *
+     * @param path
+     * @return
+     */
+    public String simplifyPath1(String path) {
+        String[] s = path.split("/");
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i < s.length; i++) {
+            if (!stack.isEmpty() && s[i].equals("..")){
+                stack.pop();
+            }else if (!s[i].equals("") && !s[i].equals(".") && !s[i].equals("..")){
+                stack.push(s[i]);
+            }
+        }
+        if (stack.isEmpty()){
+            return "/";
+        }
+        StringBuffer res = new StringBuffer();
+        for (int i = 0; i < stack.size(); i++) {
+            res.append("/").append(stack.get(i));
+        }
+        return res.toString();
+    }
+
+
+    /**
+     * 矩阵置为零
+     * 如果一个元素为 0，则将其所在行和列的所有元素都设为 0。请使用原地算法。
+     * @param matrix -
+     */
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] rows = new int[m];
+        int[] cols = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0){
+                    rows[i] = 1;
+                    cols[j] = 1;
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (rows[i] == 1){
+                    matrix[i][j] = 0;
+                }
+                if (cols[j] == 1){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+//        for (int j = 0; j < n; j++) {
+//            for (int i = 0; i < m; i++) {
+//
+//            }
+//        }
+
+        System.out.println(Arrays.deepToString(matrix));
+    }
+
+    /**
+     * 空间复杂度降低了，用原始矩阵的第一行和第一列记录，原始里面如果有0则用两个Boolean变量记录
+     * @param matrix
+     */
+    public void setZeroes1(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        boolean row0_flag = false;
+        boolean col0_flag = false;
+        // 第一行是否有零
+        for (int j = 0; j < col; j++) {
+            if (matrix[0][j] == 0) {
+                row0_flag = true;
+                break;
+            }
+        }
+        // 第一列是否有零
+        for (int i = 0; i < row; i++) {
+            if (matrix[i][0] == 0) {
+                col0_flag = true;
+                break;
+            }
+        }
+        // 把第一行第一列作为标志位
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = matrix[0][j] = 0;
+                }
+            }
+        }
+        // 置0
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        if (row0_flag) {
+            for (int j = 0; j < col; j++) {
+                matrix[0][j] = 0;
+            }
+        }
+        if (col0_flag) {
+            for (int i = 0; i < row; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+
+
+
+
+
     public static void main(String[] args) {
 //        System.out.println(new LeetCode41().multiply("555", "1199999"));
-//        int[][] mat = {
-//                {1,2,3},
-//                {4,5,6},
-//                {7,8,9}
-//        };
+        int[][] mat = {
+                {0,2,3},
+                {0,1,6},
+                {7,8,9}
+        };
 //        int[][] mat1 = {
 //                {1,2,3},
 //                {4,5,6},
 //                {7,8,9}
 //        };
-//        new LeetCode41().rotate(mat);
+        new LeetCode41().setZeroes(mat);
 //        new LeetCode41().rotate1(mat1);
-        System.out.println(new LeetCode41().lengthOfLastWord("deee"));
+//        System.out.println(new LeetCode41().simplifyPath1("/mm/../kj/k///kj../hkj/"));
     }
 
 }

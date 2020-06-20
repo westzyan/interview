@@ -452,6 +452,75 @@ public class BackTrack {
         }
     }
 
+    /**
+     * 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+     *
+     * 示例:
+     *
+     * 输入: n = 4, k = 2
+     * 输出:
+     * [
+     *   [2,4],
+     *   [3,4],
+     *   [2,3],
+     *   [1,2],
+     *   [1,3],
+     *   [1,4],
+     * ]
+     *
+     * @param n -
+     * @param k -
+     * @return -
+     */
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (n <= 0 || k <= 0 || n < k){
+            return result;
+        }
+        findCombinations(n, k, 1, new Stack<Integer>(), result);
+        return result;
+    }
+
+    private void findCombinations(int n, int k, int index, Stack<Integer> stack, List<List<Integer>> result) {
+        if (stack.size() == k){
+            result.add(new ArrayList<>(stack));
+            return;
+        }
+        for (int i = index; i <= n- (k - stack.size()) + 1; i++) {
+            stack.push(i);
+            findCombinations(n, k, i + 1, stack, result);
+            stack.pop();
+        }
+    }
+
+    /**
+     * 给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+     *
+     * 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+     *
+     *  
+     *
+     * 示例:
+     *
+     * board =
+     * [
+     *   ['A','B','C','E'],
+     *   ['S','F','C','S'],
+     *   ['A','D','E','E']
+     * ]
+     *
+     * 给定 word = "ABCCED", 返回 true
+     * 给定 word = "SEE", 返回 true
+     * 给定 word = "ABCB", 返回 false
+     *
+     * @param board -
+     * @param word -
+     * @return
+     */
+    public boolean exist(char[][] board, String word) {
+
+    }
+
     public static void main(String[] args) {
         int[] nums = {1, 2, 3};
         BackTrack solution = new BackTrack();
