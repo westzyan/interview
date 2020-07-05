@@ -86,7 +86,15 @@ public class Main {
 
     /**
      * 最接近的三数之和
-     *
+     *本题目因为要计算三个数，如果靠暴力枚举的话时间复杂度会到 O(n^3)O(n
+     * 3
+     *  )，需要降低时间复杂度
+     * 首先进行数组排序，时间复杂度 O(nlogn)O(nlogn)
+     * 在数组 nums 中，进行遍历，每遍历一个值利用其下标i，形成一个固定值 nums[i]
+     * 再使用前指针指向 start = i + 1 处，后指针指向 end = nums.length - 1 处，也就是结尾处
+     * 根据 sum = nums[i] + nums[start] + nums[end] 的结果，判断 sum 与目标 target 的距离，如果更近则更新结果 ans
+     * 同时判断 sum 与 target 的大小关系，因为数组有序，如果 sum > target 则 end--，如果 sum < target 则 start++，如果 sum == target 则说明距离为 0 直接返回结果
+     * 整个遍历过程，固定值为 n 次，双指针为 n 次，时间复杂度为 O(n^2)O(n
      * @param nums
      * @param target
      * @return
@@ -276,6 +284,15 @@ public class Main {
      * @return
      */
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int left = (n + m + 1) / 2;
+        int right = (n + m + 2) / 2;
+        return 0;
+//        return (getKth(nums1, 0, n - 1, nums2, 0, m - 1, left) + getKth(nums1, 0, n - 1, nums2, 0, right)) * 0.5;
+    }
+
+    private int getKth(int[] nums1, int start1, int end1, int[] nums2, int start2, int end2, int k) {
         return 0;
     }
 
@@ -322,6 +339,121 @@ public class Main {
         return s.substring(maxEnd - maxLen + 1, maxEnd + 1);
     }
 
+    //暴力解法
+    public String longestPalindrome1(String s) {
+        int len = s.length();
+        if (len < 2) {
+            return s;
+        }
+
+        int maxLen = 1;
+        int begin = 0;
+        // s.charAt(i) 每次都会检查数组下标越界，因此先转换成字符数组
+        char[] charArray = s.toCharArray();
+
+        // 枚举所有长度大于 1 的子串 charArray[i..j]
+        for (int i = 0; i < len - 1; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (j - i + 1 > maxLen && validPalindromic(charArray, i, j)) {
+                    maxLen = j - i + 1;
+                    begin = i;
+                }
+            }
+        }
+        return s.substring(begin, begin + maxLen);
+    }
+
+    /**
+     * 验证子串 s[left..right] 是否为回文串
+     */
+    private boolean validPalindromic(char[] charArray, int left, int right) {
+        while (left < right) {
+            if (charArray[left] != charArray[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+
+    public String longestPalindrome11(String s) {
+        int len = s.length();
+        if (len < 2) {
+            return s;
+        }
+        int maxLen = 1;
+        int begin = 0;
+
+        boolean[][] dp = new boolean[len][len];
+        char[] charArray = s.toCharArray();
+
+        for (int i = 0; i < len; i++) {
+            dp[i][i] = true;
+        }
+
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < i; j++) {
+                if (charArray[i] != charArray[j]) {
+                    dp[i][j] = false;
+                } else {
+                    if (i - j < 3) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }
+                if (dp[i][j] && i - j + 1 > maxLen) {
+                    maxLen = i - j + 1;
+                    begin = j;
+                }
+            }
+        }
+        System.out.println(Arrays.deepToString(dp));
+        return s.substring(begin, begin + maxLen);
+    }
+
+    public String longestPalindrome111(String s) {
+        // 特判
+        int len = s.length();
+        if (len < 2) {
+            return s;
+        }
+
+        int maxLen = 1;
+        int begin = 0;
+
+        // dp[i][j] 表示 s[i, j] 是否是回文串
+        boolean[][] dp = new boolean[len][len];
+        char[] charArray = s.toCharArray();
+
+        for (int i = 0; i < len; i++) {
+            dp[i][i] = true;
+        }
+        for (int j = 1; j < len; j++) {
+            for (int i = 0; i < j; i++) {
+                if (charArray[i] != charArray[j]) {
+                    dp[i][j] = false;
+                } else {
+                    if (j - i < 3) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }
+
+                // 只要 dp[i][j] == true 成立，就表示子串 s[i..j] 是回文，此时记录回文长度和起始位置
+                if (dp[i][j] && j - i + 1 > maxLen) {
+                    maxLen = j - i + 1;
+                    begin = i;
+                }
+            }
+        }
+        System.out.println(Arrays.deepToString(dp));
+        return s.substring(begin, begin + maxLen);
+    }
+
 
     /**
      * z字型变换
@@ -334,19 +466,21 @@ public class Main {
         if (numRows < 2) {
             return s;
         }
+
         List<StringBuilder> rows = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             rows.add(new StringBuilder());
         }
-        int i = 0, flag = -1;
-
-        for (char c : s.toCharArray()) {
-            rows.get(i).append(c);
-            if (i == 0 || i == numRows - 1) {
-                flag = -flag;
-            }
-            i = i + flag;
-        }
+//        int i = 0, flag = -1;
+//
+//        for (char c : s.toCharArray()) {
+//            rows.get(i).append(c);
+//            if (i == 0 || i == numRows - 1) {
+//                flag = -flag;
+//            }
+//            i = i + flag;
+//        }
+        int i = 0;
         boolean flag1 = true;
         for (char c : s.toCharArray()) {
             rows.get(i).append(c);
@@ -456,7 +590,10 @@ public class Main {
             return 0;
         }
         long ans = 0L;
-        boolean neg = str.charAt(0) == '-';
+        boolean neg = true;
+        if (str.charAt(0) == '-') {
+            neg = false;
+        }
         int i = !Character.isDigit(str.charAt(0)) ? 1 : 0;
         while (i < str.length() && Character.isDigit(str.charAt(i))) {
             ans = ans * 10 + (str.charAt(i) - '0');
@@ -800,7 +937,11 @@ public class Main {
                 }
             }
         }
+
+
         return lists;
+
+
     }
 
     /**
@@ -1293,6 +1434,31 @@ public class Main {
         head.next = null;
     }
 
+
+
+    public ListNode reverseKGroup3(ListNode head, int k) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode end = dummy;
+        while (end.next != null) {
+            for (int i = 0; i < k && end != null; i++) {
+                end = end.next;
+            }
+            if (end == null) {
+                break;
+            }
+            ListNode start = pre.next;
+            ListNode next = end.next;
+            end.next = null;
+            pre.next = reverseList(start);
+            start.next = next;
+            pre = start;
+            end = pre;
+        }
+        return dummy.next;
+    }
+
     /**
      * 先计算长度的解法
      *
@@ -1478,15 +1644,16 @@ public class Main {
     /**
      * 下一个排列
      * 首先，我们观察到对于任何给定序列的降序，没有可能的下一个更大的排列。
-     *
+     * <p>
      * 例如，以下数组不可能有下一个排列：
-     *
+     * <p>
      * [9, 5, 4, 3, 1]
      * 我们需要从右边找到第一对两个连续的数字 a[i]a[i] 和 a[i-1]a[i−1]，它们满足 a[i]>a[i-1]a[i]>a[i−1]。现在，没有对 a[i-1]a[i−1] 右侧的重新排列可以创建更大的排列，因为该子数组由数字按降序组成。因此，我们需要重新排列 a[i-1]a[i−1] 右边的数字，包括它自己。
-     *
+     * <p>
      * 现在，什么样子的重新排列将产生下一个更大的数字呢？我们想要创建比当前更大的排列。因此，我们需要将数字 a[i-1]a[i−1] 替换为位于其右侧区域的数字中比它更大的数字，例如 a[j]a[j]。
      * 我们交换数字 a[i-1]a[i−1] 和 a[j]a[j]。我们现在在索引 i-1i−1 处有正确的数字。 但目前的排列仍然不是我们正在寻找的排列。我们需要通过仅使用 a[i-1]a[i−1]右边的数字来形成最小的排列。 因此，我们需要放置那些按升序排列的数字，以获得最小的排列。
      * 但是，请记住，在从右侧扫描数字时，我们只是继续递减索引直到我们找到 a[i]a[i] 和 a[i-1]a[i−1] 这对数。其中，a[i] > a[i-1]a[i]>a[i−1]。因此，a[i-1]a[i−1] 右边的所有数字都已按降序排序。此外，交换 a[i-1]a[i−1] 和 a[j]a[j] 并未改变该顺序。因此，我们只需要反转 a[i-1]a[i−1] 之后的数字，以获得下一个最小的字典排列。
+     *
      * @param nums
      */
     public void nextPermutation(int[] nums) {
@@ -1499,7 +1666,7 @@ public class Main {
             while (j >= 0 && nums[j] <= nums[i]) {
                 j--;
             }
-            swap(nums, i , j);
+            swap(nums, i, j);
         }
         reverse(nums, i + 1);
     }
@@ -1520,8 +1687,6 @@ public class Main {
     }
 
 
-
-
     public int strStr(String haystack, String needle) {
         return haystack.indexOf(needle);
     }
@@ -1530,29 +1695,30 @@ public class Main {
     /**
      * 搜索旋转排序数组，排序数组如 5678901234
      * 先根据 nums[mid] 与 nums[lo] 的关系判断 mid 是在左段还是右段，接下来再判断 target 是在 mid 的左边还是右边，从而来调整左右边界 lo 和 hi
+     *
      * @param nums
      * @param target
      * @return
      */
-    public int search(int[] nums, int target){
+    public int search(int[] nums, int target) {
         int low = 0, high = nums.length - 1, mid = 0;
-        while (low <= high){
+        while (low <= high) {
             mid = (low + high) / 2;
-            if (nums[mid] == target){
+            if (nums[mid] == target) {
                 return mid;
             }
             //先根据nums[mid] 与 nums[low] 的关系判断 mid 是在左段还是右段
-            if (nums[mid] >= nums[low]){  //mid在左段
+            if (nums[mid] >= nums[low]) {  //mid在左段
                 //再判断 target 是在 mid 的左边还是右边，从而调整左右边界 lo 和 hi
-                if (target >= nums[low] && target <= nums[mid]){  //mid在左，
+                if (target >= nums[low] && target <= nums[mid]) {  //mid在左，
                     high = mid - 1;
-                }else {
+                } else {
                     low = mid + 1;
                 }
-            }else {
-                if (target >= nums[mid] && target <= nums[high]){
+            } else {
+                if (target >= nums[mid] && target <= nums[high]) {
                     low = mid + 1;
-                }else {
+                } else {
                     high = mid - 1;
                 }
             }
@@ -1562,19 +1728,20 @@ public class Main {
 
     /**
      * 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
-     *
+     * <p>
      * 你可以假设数组中无重复元素。
+     *
      * @param nums
      * @param target
      * @return
      */
     public int searchInsert(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
-        while(left <= right) {
-            int mid =  left + (right - left)/2 ;
-            if(nums[mid] == target) {
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
                 return mid;
-            } else if(nums[mid] < target) {
+            } else if (nums[mid] < target) {
                 left = mid + 1;
             } else {
                 right = mid - 1;
@@ -1587,12 +1754,12 @@ public class Main {
      * 有效地数独
      * 方法：一次迭代
      * 首先，让我们来讨论下面两个问题：
-     *
+     * <p>
      * 如何枚举子数独？
      * 可以使用 box_index = (row / 3) * 3 + columns / 3，其中 / 是整数除法。
      * 用3个二维数组保存是否赋值了
      * 主要是一次迭代，不用多次遍历
-     *
+     * 这里是用三个
      * @param board
      * @return
      */
@@ -1602,22 +1769,22 @@ public class Main {
         int[][] box = new int[9][9];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                if (board[i][j] != '.'){
+                if (board[i][j] != '.') {
                     int num = board[i][j] - '1'; //这里是为了在数组中正确存放从0开始
                     int indexBox = (i / 3) * 3 + j / 3;
-                    if (row[i][num] == 1){
+                    if (row[i][num] == 1) {
                         return false;
-                    }else {
+                    } else {
                         row[i][num] = 1;
                     }
-                    if (col[j][num] == 1){
+                    if (col[j][num] == 1) {
                         return false;
-                    }else {
+                    } else {
                         col[j][num] = 1;
                     }
-                    if (box[indexBox][num] == 1){
+                    if (box[indexBox][num] == 1) {
                         return false;
-                    }else {
+                    } else {
                         box[indexBox][num] = 1;
                     }
                 }
@@ -1628,11 +1795,12 @@ public class Main {
 
     /**
      * 外观数列
+     *
      * @param n
      * @return
      */
     public String countAndSay(int n) {
-        if (n == 1){
+        if (n == 1) {
             return "1";
         }
         String str = "1";
@@ -1641,11 +1809,11 @@ public class Main {
             StringBuilder stringBuilder = new StringBuilder();
             int count = 1;
             char pre = str.charAt(0);//大循环下面pre作为首数字，因为必须从第一个开始往后循环
-            for (int j = 1; j < str.length() ; j++) {
+            for (int j = 1; j < str.length(); j++) {
                 char back = str.charAt(j);//后一个数字
-                if (back == pre){//相等count+1
+                if (back == pre) {//相等count+1
                     count++;
-                }else {
+                } else {
                     stringBuilder.append(count).append(pre);
                     //不等则append几个pre
                     pre = back;
@@ -1659,12 +1827,9 @@ public class Main {
     }
 
 
-
-
-
     // 101/4
     public static void main(String[] args) {
-        System.out.println(new Main().countAndSay(5));
+        System.out.println(new Main().longestPalindrome11("aaab"));
 //        System.out.println((-1^-1));
 //        System.out.println(101 >> 4);
     }
