@@ -281,11 +281,11 @@ public class DP {
     }
 
     /**
-     * 优化版
+     * 优化版 零钱兑换I
      * 由于dp[i][j] 只与dp[i-1]有关系，所以可以优化
-     * @param amount
-     * @param coins
-     * @return
+     * @param amount -
+     * @param coins -
+     * @return -
      */
     public int change1(int amount, int[] coins){
         int n = coins.length;
@@ -299,6 +299,22 @@ public class DP {
             }
         }
         return dp[amount];
+    }
+
+    // 零钱兑换 II
+    public int coinChange3(int[] coins, int amount) {
+        int max = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
     }
 
     /**

@@ -42,6 +42,30 @@ public class QuickSort {
         return i;
     }
 
+    /**
+     * 找到数组中倒数第k大的数
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int findKthLargest(int[] nums, int k) {
+        int len = nums.length;
+        int left = 0;
+        int right = len - 1;
+        int target = len - k;
+        while (true) {
+            int index = Partition(nums, left, right);
+            if (index == target) {
+                return nums[index];
+            } else if (index > target) {
+                right = right - 1;
+            } else {
+                left = index + 1;
+            }
+        }
+    }
+
+
 
 
 

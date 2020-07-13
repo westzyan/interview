@@ -158,7 +158,7 @@ public class LeetCode41 {
      * __|     |__|                       __|  |__
      * left                      right
      * 对于位置left而言，它左边最大值一定是left_max，右边最大值“大于等于”right_max，这时候，如果left_max<right_max成立，那么它就知道自己能存多少水了。无论右边将来会不会出现更大的right_max，都不影响这个结果。 所以当left_max<right_max时，我们就希望去处理left下标，反之，我们希望去处理right下标。
-     *
+     *105
      * @param height
      * @return
      */
@@ -262,16 +262,16 @@ public class LeetCode41 {
 
     /**
      * 给定一个字符串 (s) 和一个字符模式 (p) ，实现一个支持 '?' 和 '*' 的通配符匹配。
-     *
+     * <p>
      * '?' 可以匹配任何单个字符。
      * '*' 可以匹配任意字符串（包括空字符串）。
      * 两个字符串完全匹配才算匹配成功。
-     *
+     * <p>
      * 说明:
-     *
+     * <p>
      * s 可能为空，且只包含从 a-z 的小写字母。
      * p 可能为空，且只包含从 a-z 的小写字母，以及字符 ? 和 *。
-     *
+     * <p>
      * 动态规划
      */
     public boolean isMatch(String s, String p) {
@@ -284,7 +284,7 @@ public class LeetCode41 {
         // 这里对空s的匹配情况进行初始化
         for (int j = 1; j <= p.length(); j++) {
             // s匹配*,相当于s匹配空；s匹配**相当于s匹配*；s匹配*cb*相当于s匹配*cb
-            if (p.charAt(j - 1) == '*') dp[0][j] = dp[0][j-1];
+            if (p.charAt(j - 1) == '*') dp[0][j] = dp[0][j - 1];
         }
         // 注意 i,j表示的是s和p中第几个字符，对应的索引索引是i-1,j-1
         for (int i = 1; i <= s.length(); i++) {
@@ -325,16 +325,16 @@ public class LeetCode41 {
 
         //初始化
         dp[0][0] = true;
-        for (int i = 1; i <= n ; i++) {
+        for (int i = 1; i <= n; i++) {
             dp[0][i] = dp[0][i - 1] && p.charAt(i - 1) == '*';
         }
 
         //状态转移
-        for (int i = 1; i <= m ; i++) {
-            for (int j = 1; j <= n ; j++) {
-                if (s.charAt(i - 1) == p.charAt(j - 1) && p.charAt(j - 1) == '?'){
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s.charAt(i - 1) == p.charAt(j - 1) && p.charAt(j - 1) == '?') {
                     dp[i][j] = dp[i - 1][j - 1];
-                }else if (p.charAt(j - 1) == '*'){
+                } else if (p.charAt(j - 1) == '*') {
                     dp[i][j] = dp[i][j - 1] || dp[i - 1][j];
                 }
             }
@@ -345,29 +345,30 @@ public class LeetCode41 {
     /**
      * 跳跃游戏
      * 给定一个非负整数数组，你最初位于数组的第一个位置。
-     *
+     * <p>
      * 数组中的每个元素代表你在该位置可以跳跃的最大长度。
-     *
+     * <p>
      * 你的目标是使用最少的跳跃次数到达数组的最后一个位置。
-     *
+     * <p>
      * 示例:
-     *
+     * <p>
      * 输入: [2,3,1,1,4]
      * 输出: 2
      * 解释: 跳到最后一个位置的最小跳跃数是 2。
      *      从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
-     *
+     * <p>
      * 过程解析：
-     *         最开始遍历 i = 0, end = 0,因此 step 会进行 step ++，我们可以认为，这是开始起跳，因为必定会落下，因此跳跃次数 + 1
-     *         而 nums[0] 这个数限制了你只能在落脚在某个范围内，假如 nums[0] = 4，那么你只能选择落脚在 [1, 4] 位置，而如果到了边界，那么肯定是一次新的起跳，因此次数需要再 + 1
-     *
-     *         从 0 位置开始起跳，你落脚的必定是 [1, 4] 位置中能够跳得更远的，因为根据贪心思想，这样做能够尽可能的减少跳跃次数，因为更加接近最后一个位置
-     *         而在这个过程遍历 [1, 4] 过程中一直记录着最远位置 k，而你落地在 [1, 4] 之间，落地的那个点也就是 [1, 4] 之间最能够跳得远的那个位置，因此当到达边界的时候，将 end 更新为 k
-     *
-     *         注意：[1, 4] 跳得最远的位置必定不会在 [1, 4] ，因为如果在 [1, 4] ，那么表示根本就出不去 [1, 4] 这个圈
-     *         当然不会是 [4,1,1,1,0,1,2] 这种的，因为如果是这种的，压根过不去这个 0，因此必定第一次起跳必定能够跳出 [1, 4] 这个范围，比如 [4,1,1,1,1,1,0]
-     *
+     * 最开始遍历 i = 0, end = 0,因此 step 会进行 step ++，我们可以认为，这是开始起跳，因为必定会落下，因此跳跃次数 + 1
+     * 而 nums[0] 这个数限制了你只能在落脚在某个范围内，假如 nums[0] = 4，那么你只能选择落脚在 [1, 4] 位置，而如果到了边界，那么肯定是一次新的起跳，因此次数需要再 + 1
+     * <p>
+     * 从 0 位置开始起跳，你落脚的必定是 [1, 4] 位置中能够跳得更远的，因为根据贪心思想，这样做能够尽可能的减少跳跃次数，因为更加接近最后一个位置
+     * 而在这个过程遍历 [1, 4] 过程中一直记录着最远位置 k，而你落地在 [1, 4] 之间，落地的那个点也就是 [1, 4] 之间最能够跳得远的那个位置，因此当到达边界的时候，将 end 更新为 k
+     * <p>
+     * 注意：[1, 4] 跳得最远的位置必定不会在 [1, 4] ，因为如果在 [1, 4] ，那么表示根本就出不去 [1, 4] 这个圈
+     * 当然不会是 [4,1,1,1,0,1,2] 这种的，因为如果是这种的，压根过不去这个 0，因此必定第一次起跳必定能够跳出 [1, 4] 这个范围，比如 [4,1,1,1,1,1,0]
+     * <p>
      * 解法：贪婪算法，每次选择能跳的最大的 我们每次在可跳范围内选择可以使得跳的更远的位置。
+     *
      * @param nums
      * @return
      */
@@ -379,7 +380,7 @@ public class LeetCode41 {
         for (int i = 0; i < nums.length - 1; i++) {
             //找能跳最远的
             maxPosition = Math.max(maxPosition, nums[i] + i);
-            if (i == end){ //遇到边界，更新边界，步数加1
+            if (i == end) { //遇到边界，更新边界，步数加1
                 end = maxPosition;
                 steps++;
             }
@@ -412,7 +413,7 @@ public class LeetCode41 {
     //  [9,6,3]
     //]
     public void rotate(int[][] matrix) {
-        if (matrix.length == 0){
+        if (matrix.length == 0) {
             return;
         }
         int n = matrix.length;
@@ -458,33 +459,34 @@ public class LeetCode41 {
     }
 
     /**
-     *  字母异位词分组
-     *  给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
-     *
+     * 字母异位词分组
+     * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     * <p>
      * 示例:
-     *
+     * <p>
      * 输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
      * 输出:
      * [
-     *   ["ate","eat","tea"],
-     *   ["nat","tan"],
-     *   ["bat"]
+     * ["ate","eat","tea"],
+     * ["nat","tan"],
+     * ["bat"]
      * ]
+     *
      * @param strs
      * @return
      */
     public List<List<String>> groupAnagrams(String[] strs) {
-        if (strs.length == 0){
+        if (strs.length == 0) {
             return new ArrayList<>();
         }
         Map<String, List<String>> map = new HashMap<>();
         for (String str : strs) {
             char[] chars = str.toCharArray();
             Arrays.sort(chars);
-            if (map.containsKey(String.valueOf(chars))){
+            if (map.containsKey(String.valueOf(chars))) {
                 map.get(String.valueOf(chars)).add(str);
-            }else {
-                map.put(str,new ArrayList<String>());
+            } else {
+                map.put(str, new ArrayList<String>());
                 map.get(String.valueOf(chars)).add(str);
             }
         }
@@ -495,31 +497,32 @@ public class LeetCode41 {
     /**
      * 螺旋矩阵
      * 给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入:
      * [
-     *  [ 1, 2, 3 ],
-     *  [ 4, 5, 6 ],
-     *  [ 7, 8, 9 ]
+     * [ 1, 2, 3 ],
+     * [ 4, 5, 6 ],
+     * [ 7, 8, 9 ]
      * ]
      * 输出: [1,2,3,6,9,8,7,4,5]
+     *
      * @param matrix
      * @return
      */
     public List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> list = new ArrayList<>();
-        if (matrix.length == 0){
+        if (matrix.length == 0) {
             return list;
         }
         int up = 0;
         int down = matrix.length - 1;
         int left = 0;
         int right = matrix[0].length - 1;
-        while (true){
+        while (true) {
             // 最上面一行
-            for (int col = left; col <=right ; col++) {
+            for (int col = left; col <= right; col++) {
                 list.add(matrix[up][col]);
             }
             // 向下逼近
@@ -529,14 +532,14 @@ public class LeetCode41 {
                 break;
             }
             // 最右边一行
-            for (int row = up; row <= down ; row++) {
+            for (int row = up; row <= down; row++) {
                 list.add(matrix[row][right]);
             }
             right--;
-            if (right < left){
+            if (right < left) {
                 break;
             }
-            for (int col = right; col >= left ; col--) {
+            for (int col = right; col >= left; col--) {
                 list.add(matrix[down][col]);
             }
             // 向上逼近
@@ -563,29 +566,30 @@ public class LeetCode41 {
     /**
      * 跳跃游戏
      * 给定一个非负整数数组，你最初位于数组的第一个位置。
-     *
+     * <p>
      * 数组中的每个元素代表你在该位置可以跳跃的最大长度。
-     *
+     * <p>
      * 判断你是否能够到达最后一个位置。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入: [2,3,1,1,4]
      * 输出: true
      * 解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
-     *
+     * <p>
      * 解题思路：
      * 如果某一个作为 起跳点 的格子可以跳跃的距离是 3，那么表示后面 3 个格子都可以作为 起跳点。
      * 可以对每一个能作为 起跳点 的格子都尝试跳一次，把 能跳到最远的距离 不断更新。
      * 如果可以一直跳到最后，就成功了。
      * 方  法所依据的核心特性：如果一个位置能够到达，那么这个位置左侧所有位置都能到达。
+     *
      * @param nums
      * @return
      */
     public boolean canJump(int[] nums) {
         int k = 0;
         for (int i = 0; i < nums.length; i++) {
-            if (i > k){
+            if (i > k) {
                 return false;
             }
             k = Math.max(k, i + nums[i]);
@@ -596,26 +600,27 @@ public class LeetCode41 {
     /**
      * 区间合并问题
      * 给出一个区间的集合，请合并所有重叠的区间。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入: [[1,3],[2,6],[8,10],[15,18]]
      * 输出: [[1,6],[8,10],[15,18]]
      * 解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
-     *可以被合并的区间一定是有交集的区间，前提是区间按照左端点排好序，这里的交集可以是一个点（例如例 2）。
-     *
+     * 可以被合并的区间一定是有交集的区间，前提是区间按照左端点排好序，这里的交集可以是一个点（例如例 2）。
+     * <p>
      * 至于为什么按照左端点升序排序，这里要靠一点直觉猜想，我没有办法说清楚是怎么想到的，有些问题的策略是按照右端点升序排序（也有可能是降序排序，具体问题具体分析）。
-     *
+     * <p>
      * 接着说，直觉上，只需要对所有的区间按照左端点升序排序，然后遍历。
-     *
+     * <p>
      * 如果当前遍历到的区间的左端点 > 结果集中最后一个区间的右端点，说明它们没有交集，此时把区间添加到结果集；
      * 如果当前遍历到的区间的左端点 <= 结果集中最后一个区间的右端点，说明它们有交集，此时产生合并操作，即：对结果集中最后一个区间的右端点更新（取两个区间的最大值）。
+     *
      * @param intervals
      * @return
      */
     public int[][] merge(int[][] intervals) {
         int len = intervals.length;
-        if (len < 2){
+        if (len < 2) {
             return intervals;
         }
 
@@ -631,15 +636,15 @@ public class LeetCode41 {
         List<int[]> res = new ArrayList<>();
         res.add(intervals[0]);
 
-        for (int i = 1; i < len ; i++) {
+        for (int i = 1; i < len; i++) {
             int[] cur = intervals[i];
             // 每次新遍历到的列表与当前结果集中的最后一个区间的末尾端点进行比较
             int[] peek = res.get(res.size() - 1);
-            if (cur[0] > peek[1]){
+            if (cur[0] > peek[1]) {
                 res.add(cur);
-            }else {
+            } else {
                 // 注意，这里应该取最大
-                peek[1] = Math.max(cur[1],peek[1]);
+                peek[1] = Math.max(cur[1], peek[1]);
             }
         }
         return res.toArray(new int[res.size()][]);
@@ -647,19 +652,20 @@ public class LeetCode41 {
 
     /**
      * 最后一个单词的长度
+     *
      * @param s
      * @return
      */
-    public int lengthOfLastWord(String s){
+    public int lengthOfLastWord(String s) {
         int end = s.length() - 1;
-        while (end >= 0 && s.charAt(end) == ' '){
+        while (end >= 0 && s.charAt(end) == ' ') {
             end--;
         }
-        if (end < 0){
+        if (end < 0) {
             return 0;
         }
         int start = end;
-        while (start>=0 && s.charAt(start) != ' '){
+        while (start >= 0 && s.charAt(start) != ' ') {
             start--;
         }
         return end - start;
@@ -668,20 +674,19 @@ public class LeetCode41 {
     /**
      * 螺旋矩阵2
      * 给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
-     *
+     * <p>
      * 示例:
-     *
+     * <p>
      * 输入: 3
      * 输出:
      * [
-     *  [ 1, 2, 3 ],
-     *  [ 8, 9, 4 ],
-     *  [ 7, 6, 5 ]
+     * [ 1, 2, 3 ],
+     * [ 8, 9, 4 ],
+     * [ 7, 6, 5 ]
      * ]
-     *
      */
     public int[][] generateMatrix(int n) {
-        if (n == 0){
+        if (n == 0) {
             return null;
         }
         int[][] mat = new int[n][n];
@@ -690,23 +695,23 @@ public class LeetCode41 {
         int left = 0;
         int right = n - 1;
         int num = 1;
-        while (num <= n * n){
-            for (int i = left; i <= right ; i++) {
+        while (num <= n * n) {
+            for (int i = left; i <= right; i++) {
                 mat[up][i] = num;
                 num++;
             }
             up++;
-            for (int i = up; i <= down ; i++) {
+            for (int i = up; i <= down; i++) {
                 mat[i][right] = num;
                 num++;
             }
             right--;
-            for (int i = right; i >= left ; i--) {
+            for (int i = right; i >= left; i--) {
                 mat[down][i] = num;
                 num++;
             }
             down--;
-            for (int i = down; i >= up ; i--) {
+            for (int i = down; i >= up; i--) {
                 mat[i][left] = num;
                 num++;
             }
@@ -717,6 +722,7 @@ public class LeetCode41 {
 
     /**
      * 下一个排列
+     *
      * @param n
      * @param k
      * @return
@@ -725,11 +731,11 @@ public class LeetCode41 {
         boolean[] used = new boolean[n + 1];
         int[] factorial = new int[n + 1];
         factorial[0] = 1;
-        for (int i = 1; i <= n ; i++) {
-            factorial[i] = factorial[i- 1] * i;
+        for (int i = 1; i <= n; i++) {
+            factorial[i] = factorial[i - 1] * i;
         }
         List<Integer> path = new ArrayList<>();
-        getPermutationDFS(0, n, k,factorial, used , path);
+        getPermutationDFS(0, n, k, factorial, used, path);
 
         StringBuilder stringBuilder = new StringBuilder();
         for (Integer integer : path) {
@@ -738,16 +744,17 @@ public class LeetCode41 {
         return stringBuilder.toString();
 
     }
+
     private void getPermutationDFS(int index, int n, int k, int[] factorial, boolean[] used, List<Integer> path) {
-        if (index == n){
+        if (index == n) {
             return;
         }
         int cnt = factorial[n - 1 - index];
-        for (int i = 1; i <= n ; i++) {
-            if (used[i]){
+        for (int i = 1; i <= n; i++) {
+            if (used[i]) {
                 continue;
             }
-            if (cnt < k){
+            if (cnt < k) {
                 k = k - cnt;
                 continue;
             }
@@ -760,21 +767,22 @@ public class LeetCode41 {
     /**
      * 旋转链表
      * 给定一个链表，旋转链表，将链表每个节点向右移动 k 个位置，其中 k 是非负数。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入: 1->2->3->4->5->NULL, k = 2
      * 输出: 4->5->1->2->3->NULL
      * 解释:
      * 向右旋转 1 步: 5->1->2->3->4->NULL
      * 向右旋转 2 步: 4->5->1->2->3->NULL
      * 思路，连接成环，再截断
+     *
      * @param head
      * @param k
      * @return
      */
     public ListNode rotateRight(ListNode head, int k) {
-        if (head == null || head.next == null){
+        if (head == null || head.next == null) {
             return head;
         }
         ListNode oldTail = head;
@@ -785,7 +793,7 @@ public class LeetCode41 {
         oldTail.next = head;
 
         ListNode newTail = head;
-        for (int i = 0; i < n - k % n - 1 ; i++) {
+        for (int i = 0; i < n - k % n - 1; i++) {
             newTail = newTail.next;
         }
         ListNode newHead = newTail.next;
@@ -802,7 +810,7 @@ public class LeetCode41 {
     //
     //问总共有多少条不同的路径？
     // 多计算方法
-    public int uniquePaths(int m, int n){
+    public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];
         for (int i = 0; i < m; i++) {
             dp[i][0] = 1;
@@ -811,12 +819,13 @@ public class LeetCode41 {
             dp[0][i] = 1;
         }
         for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n ; j++) {
+            for (int j = 1; j < n; j++) {
                 dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
-        return dp[m -1][n - 1];
+        return dp[m - 1][n - 1];
     }
+
     /**
      * 因为在这里面每个点的路径都是这个点的 上一个点的路径数 + 左边点的路径数 ，因此只要将上一行和本行的数值记录下来就能推导目标点的
      * 路径数，可以将空间复杂度由 O(m * n) 优化为 O(2n)
@@ -903,23 +912,23 @@ public class LeetCode41 {
         int[][] dp = new int[obstacleGrid.length][obstacleGrid[0].length];
 
         //边界处理，注意如果遇到了障碍，后面的点的路径数就都为0，要break
-        for (int i=0; i<m; i++){
+        for (int i = 0; i < m; i++) {
             if (obstacleGrid[i][0] == 1) break;
             dp[i][0] = 1;
         }
         //边界处理，注意如果遇到了障碍，后面的点的路径数就都为0，要break
-        for (int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             if (obstacleGrid[0][i] == 1) break;
             dp[0][i] = 1;
         }
 
-        for (int i=1; i<m; i++){
-            for (int j=1; j<n; j++) {
-                if (obstacleGrid[i][j] == 1)  continue; //如果这个点是障碍，则跳过，dp[i][j] = 0
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 1) continue; //如果这个点是障碍，则跳过，dp[i][j] = 0
                 dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
-        return dp[m-1][n-1];
+        return dp[m - 1][n - 1];
 
     }
 
@@ -954,32 +963,33 @@ public class LeetCode41 {
     /**
      * 最小路径和
      * 给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
-     *
+     * <p>
      * 说明：每次只能向下或者向右移动一步。
-     *
+     * <p>
      * 示例:
-     *
+     * <p>
      * 输入:
      * [
      *   [1,3,1],
-     *   [1,5,1],
-     *   [4,2,1]
+     * [1,5,1],
+     * [4,2,1]
      * ]
      * 输出: 7
      * 解释: 因为路径 1→3→1→1→1 的总和最小。
-     *
+     * <p>
      * 解题思路
      * 1、dp定义：dp[i][j]代表从grid[0][0]-grid[i][j]的最小路径和
      * 2、初始状态：dp[0][0] = grid[0][0], dp[0][j] = sum(grid[0][0-j]), dp[i][0] = sum(grid[0-i][0])
      * 3、状态方程：dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
      * 4、所求答案：dp[grid.length - 1][grid[0].length - 1]
+     *
      * @param grid
      * @return
      */
     public int minPathSum(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
-        if (m == 0 || n == 0){
+        if (m == 0 || n == 0) {
             return 0;
         }
         int[][] dp = new int[m][n];
@@ -1000,27 +1010,27 @@ public class LeetCode41 {
 
     /**
      * 根据题意加一，没错就是加一这很重要，因为它是只加一的所以有可能的情况就只有两种：
-     *
+     * <p>
      * 除 99 之外的数字加一；
      * 数字 99。
      * 加一得十进一位个位数为 00 加法运算如不出现进位就运算结束了且进位只会是一。
-     *
+     * <p>
      * 所以只需要判断有没有进位并模拟出它的进位方式，如十位数加 11 个位数置为 00，如此循环直到判断没有再进位就退出循环返回结果。
-     *
+     * <p>
      * 然后还有一些特殊情况就是当出现 9999、999999 之类的数字时，循环到最后也需要进位，出现这种情况时需要手动将它进一位。
      *
      * @param digits -
      * @return -
      */
-    public int[] plusOne(int[] digits){
-        if (digits[digits.length - 1] < 9){
+    public int[] plusOne(int[] digits) {
+        if (digits[digits.length - 1] < 9) {
             digits[digits.length - 1] += 1;
             return digits;
         }
-        for (int i = digits.length - 1; i >= 0 ; i--) {
+        for (int i = digits.length - 1; i >= 0; i--) {
             digits[i]++;
             digits[i] = digits[i] % 10;
-            if (digits[i] != 0){
+            if (digits[i] != 0) {
                 return digits;
             }
         }
@@ -1032,13 +1042,15 @@ public class LeetCode41 {
     /**
      * 二进制求和
      * 内置函数办法
+     *
      * @param a -
      * @param b -
      * @return -
      */
     public String addBinary(String a, String b) {
-        return Integer.toBinaryString(Integer.parseInt(a,2) + Integer.parseInt(b, 2));
+        return Integer.toBinaryString(Integer.parseInt(a, 2) + Integer.parseInt(b, 2));
     }
+
     //位运算
     public String addBinary1(String a, String b) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -1046,7 +1058,7 @@ public class LeetCode41 {
         int length1 = a.length();
         int length2 = b.length();
         int carry = 0;
-        while (length1 > 0 || length2 > 0){
+        while (length1 > 0 || length2 > 0) {
             int val1 = length1 > 0 ? a.charAt(length1 - 1) - '0' : 0;
             int val2 = length2 > 0 ? b.charAt(length2 - 1) - '0' : 0;
             int sum = (val1 + val2 + carry) % radix;
@@ -1062,17 +1074,18 @@ public class LeetCode41 {
     /**
      * 求一个数的平方根
      * 方法一：二分法
+     *
      * @param x -
      * @return -
      */
     public int mySqrt(int x) {
         int l = 0, r = x, ans = -1;
-        while (l <= r){
+        while (l <= r) {
             int mid = l + (r - l) / 2;
-            if ((long) mid * mid <= x){
+            if ((long) mid * mid <= x) {
                 ans = mid;
                 l = mid + 1;
-            }else {
+            } else {
                 r = mid - 1;
             }
         }
@@ -1081,34 +1094,34 @@ public class LeetCode41 {
 
     // 牛顿迭代法
     public int mySqrt1(int x) {
-        if (x == 0){
+        if (x == 0) {
             return 0;
         }
 
         double C = x, x0 = x;
-        while (true){
+        while (true) {
             double xi = 0.5 * (x0 + C / x0);
-            if (Math.abs(x0 - xi) < 1e-7){
+            if (Math.abs(x0 - xi) < 1e-7) {
                 break;
             }
             x0 = xi;
         }
-        return (int)x0;
+        return (int) x0;
     }
 
     //尝试求三次方根
     public double mySqrt3(double x) {
-        if (x == 0 || x == 1 || x == -1){
+        if (x == 0 || x == 1 || x == -1) {
             return x;
         }
         double l = x > 0 ? 0 : x;
         double r = x > 0 ? x : 0;
         double mid = l + (r - l) / 2;
 
-        while (r - l > 1e-7){
-            if (mid * mid * mid > x){
+        while (r - l > 1e-7) {
+            if (mid * mid * mid > x) {
                 r = mid;
-            }else {
+            } else {
                 l = mid;
             }
             mid = l + (r - l) / 2;
@@ -1118,28 +1131,29 @@ public class LeetCode41 {
 
     /**
      * 爬楼梯
+     *
      * @param n
      * @return
      */
     public int climbStairs(int n) {
-        if (n < 3){
+        if (n < 3) {
             return n;
         }
         int[] dp = new int[n + 1];
         dp[1] = 1;
         dp[2] = 2;
-        for (int i = 3; i <= n ; i++) {
+        for (int i = 3; i <= n; i++) {
             dp[i] = dp[i - 1] + dp[i - 2];
         }
         return dp[n];
     }
 
     public int climbStairs1(int n) {
-        if (n < 3){
+        if (n < 3) {
             return n;
         }
         int pre = 1, preOfPre = 1, cur = 1;
-        for(int i = 2; i <= n; i++) {
+        for (int i = 2; i <= n; i++) {
             cur = pre + preOfPre;
             preOfPre = pre;
             pre = cur;
@@ -1149,6 +1163,7 @@ public class LeetCode41 {
 
     /**
      * 简化路径，unix路径
+     *
      * @param path
      * @return
      */
@@ -1156,15 +1171,15 @@ public class LeetCode41 {
         Stack<String> stack = new Stack<>();
         String[] str = path.split("/");
         for (String s : str) {
-            if (s.equals("..")){
-                if (!stack.isEmpty()){
+            if (s.equals("..")) {
+                if (!stack.isEmpty()) {
                     stack.pop();
                 }
-            }else if (!s.equals("") && !s.equals(".")){
+            } else if (!s.equals("") && !s.equals(".")) {
                 stack.push(s);
             }
         }
-        if (stack.isEmpty()){
+        if (stack.isEmpty()) {
             return "/";
         }
         StringBuilder ans = new StringBuilder();
@@ -1187,13 +1202,13 @@ public class LeetCode41 {
         String[] s = path.split("/");
         Stack<String> stack = new Stack<>();
         for (int i = 0; i < s.length; i++) {
-            if (!stack.isEmpty() && s[i].equals("..")){
+            if (!stack.isEmpty() && s[i].equals("..")) {
                 stack.pop();
-            }else if (!s[i].equals("") && !s[i].equals(".") && !s[i].equals("..")){
+            } else if (!s[i].equals("") && !s[i].equals(".") && !s[i].equals("..")) {
                 stack.push(s[i]);
             }
         }
-        if (stack.isEmpty()){
+        if (stack.isEmpty()) {
             return "/";
         }
         StringBuffer res = new StringBuffer();
@@ -1207,6 +1222,7 @@ public class LeetCode41 {
     /**
      * 矩阵置为零
      * 如果一个元素为 0，则将其所在行和列的所有元素都设为 0。请使用原地算法。
+     *
      * @param matrix -
      */
     public void setZeroes(int[][] matrix) {
@@ -1216,7 +1232,7 @@ public class LeetCode41 {
         int[] cols = new int[n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (matrix[i][j] == 0){
+                if (matrix[i][j] == 0) {
                     rows[i] = 1;
                     cols[j] = 1;
                 }
@@ -1224,10 +1240,10 @@ public class LeetCode41 {
         }
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (rows[i] == 1){
+                if (rows[i] == 1) {
                     matrix[i][j] = 0;
                 }
-                if (cols[j] == 1){
+                if (cols[j] == 1) {
                     matrix[i][j] = 0;
                 }
             }
@@ -1243,6 +1259,7 @@ public class LeetCode41 {
 
     /**
      * 空间复杂度降低了，用原始矩阵的第一行和第一列记录，原始里面如果有0则用两个Boolean变量记录
+     *
      * @param matrix
      */
     public void setZeroes1(int[][] matrix) {
@@ -1293,24 +1310,30 @@ public class LeetCode41 {
     }
 
 
-
-
-
     public static void main(String[] args) {
 //        System.out.println(new LeetCode41().multiply("555", "1199999"));
         int[][] mat = {
-                {0,2,3},
-                {0,1,6},
-                {7,8,9}
+                {0, 2, 3},
+                {0, 1, 6},
+                {7, 8, 9}
         };
 //        int[][] mat1 = {
 //                {1,2,3},
 //                {4,5,6},
 //                {7,8,9}
 //        };
-        new LeetCode41().setZeroes(mat);
+//        new LeetCode41().setZeroes(mat);
 //        new LeetCode41().rotate1(mat1);
+//        System.out.println(new LeetCode41().mySqrt(5));
 //        System.out.println(new LeetCode41().simplifyPath1("/mm/../kj/k///kj../hkj/"));
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        stack.push(4);
+        for (Integer integer : stack) {
+            System.out.println(integer);
+        }
     }
 
 }

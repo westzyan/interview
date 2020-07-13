@@ -8,8 +8,8 @@ public class Test {
 
     /**
      * 在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
-     *      * 请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
-     *      * 思路为从左下角向右上角比较
+     * * 请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+     * * 思路为从左下角向右上角比较
      *
      * @param target
      * @param array
@@ -146,18 +146,19 @@ public class Test {
 
     /**
      * 翻转链表
+     *
      * @param head
      * @return
      */
-    public static ListNode reverseList(ListNode head){
-        if (head == null || head.next == null){
+    public static ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
             return head;
         }
 //        ListNode pre = null;
         ListNode pre = head;
         ListNode cur = head.next;
         pre.next = null;
-        while (cur != null){
+        while (cur != null) {
             ListNode next = cur.next;
             cur.next = pre;
             pre = cur;
@@ -286,14 +287,15 @@ public class Test {
      * 第一天牛妹吃掉蛋糕总数三分之一多一个，第二天又将剩下的蛋糕吃掉三分之一多一个，
      * 以后每天吃掉前一天剩下的三分之一多一个，到第n天准备吃的时候只剩下一个蛋糕。
      * 牛妹想知道第一天开始吃的时候蛋糕一共有多少呢？
+     *
      * @param n
      * @return
      */
-    public int cakeNumber (int n) {
+    public int cakeNumber(int n) {
         // write code here
         int cnt = 1;
-        for(int i=1;i<=n-1;i++){//第n天还没吃，所以一共只吃了n-1天
-            cnt=((cnt+1)*3)/2;
+        for (int i = 1; i <= n - 1; i++) {//第n天还没吃，所以一共只吃了n-1天
+            cnt = ((cnt + 1) * 3) / 2;
         }
         return cnt;
     }
@@ -1384,8 +1386,8 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
     /**
      * 输入一棵二叉树，求该树的深度。从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度。
      *
-     * @param root
-     * @return
+     * @param root -
+     * @return -
      */
     public int TreeDepth(TreeNode root) {
         if (root == null) {
@@ -1402,7 +1404,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
      * 通过后续遍历，后续先判断左子树，然后判断右子树
      * 然后判断根节点
      *
-     * @param root
+     * @param root -
      */
     public boolean IsBalanced_Solution(TreeNode root) {
         return depth(root) != -1;
@@ -1452,6 +1454,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
     /**
      * 一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
      * 先进行亦或，剩下的数就是两个不同的数亦或的结果，
+     *
      * @param array
      * @param num1
      * @param num2
@@ -1751,6 +1754,38 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
         }
         return node.val;
     }
+
+
+    /**
+     * 机器人能够走的路径
+     * 牛逼 robot
+     * @param m
+     * @param n
+     * @param k
+     * @return
+     */
+    public int movingCount(int m, int n, int k) {
+        boolean[][] visited = new boolean[m][n];
+        return dfs(0, 0, m, n, k, visited);
+    }
+
+    private int dfs(int i, int j, int m, int n, int k, boolean[][] visited) {
+//        if (i < 0 || i >= m || j < 0 || j >= n || (i / 10 + i % 10 + j / 10 + j % 10) > k || visited[i][j]) {
+//            visited[i][j] = true;
+//            return 0;
+//        }
+        if (i < 0 || i >= m || j < 0 || j >= n || visited[i][j]) {
+            return 0;
+        }
+        if ((i / 10 + i % 10 + j / 10 + j % 10) > k) {
+            visited[i][j] = true;
+            return 0;
+        }
+        visited[i][j] = true;
+        return dfs(i + 1, j, m, n, k, visited) + dfs(i - 1, j, m, n, k, visited) + dfs(i, j + 1, m, n, k, visited) +
+                dfs(i, j - 1, m, n, k, visited) + 1;
+    }
+
 
 //    public int LastRemaining_Solution(int n, int m) {
 //        if (n<=0 || m<=0) return -1;
@@ -2375,7 +2410,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
      */
     public ArrayList<Integer> maxInWindows(int[] num, int size) {
         ArrayList<Integer> res = new ArrayList<>();
-        if (size < 1 || num.length == 0){
+        if (size < 1 || num.length == 0) {
             return res;
         }
         LinkedList<Integer> list = new LinkedList<>();
@@ -2402,20 +2437,21 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
      * 请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？
      * 例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
      * 思路就是贪婪，尽可能凑够3
+     *
      * @param target
      * @return
      */
     public int cutRope(int target) {
-        if(target<=0) return 0;
-        if(target==1 || target == 2) return 1;
-        if(target==3) return 2;
+        if (target <= 0) return 0;
+        if (target == 1 || target == 2) return 1;
+        if (target == 3) return 2;
         int m = target % 3;
-        switch(m){
-            case 0 :
+        switch (m) {
+            case 0:
                 return (int) Math.pow(3, target / 3);
-            case 1 :
+            case 1:
                 return (int) Math.pow(3, target / 3 - 1) * 4;
-            case 2 :
+            case 2:
                 return (int) Math.pow(3, target / 3) * 2;
         }
         return 0;
@@ -2425,12 +2461,13 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
     /**
      * 矩阵中的路径
      */
-    boolean [] visited = null;
+    boolean[] visited = null;
+
     public boolean hasPath(char[] matrix, int rows, int cols, char[] str) {
         visited = new boolean[matrix.length];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (subHasPath(matrix, rows, cols, str, i, j, 0)){
+                if (subHasPath(matrix, rows, cols, str, i, j, 0)) {
                     return true;
                 }
             }
@@ -2439,23 +2476,23 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
     }
 
     private boolean subHasPath(char[] matrix, int rows, int cols, char[] str, int row, int col, int len) {
-        if (matrix[row * cols + col] != str[len] || visited[row * cols + col] == true){
+        if (matrix[row * cols + col] != str[len] || visited[row * cols + col] == true) {
             return false;
         }
-        if (len == str.length - 1){
+        if (len == str.length - 1) {
             return true;
         }
-        visited[row*cols + col] = true;
-        if (row > 0 && subHasPath(matrix, rows, cols, str, row - 1, col, len + 1)){
+        visited[row * cols + col] = true;
+        if (row > 0 && subHasPath(matrix, rows, cols, str, row - 1, col, len + 1)) {
             return true;
         }
-        if (row < rows - 1 && subHasPath(matrix, rows, cols, str, row + 1, col, len + 1)){
+        if (row < rows - 1 && subHasPath(matrix, rows, cols, str, row + 1, col, len + 1)) {
             return true;
         }
-        if (col > 0 && subHasPath(matrix, rows, cols, str, row, col - 1, len + 1)){
+        if (col > 0 && subHasPath(matrix, rows, cols, str, row, col - 1, len + 1)) {
             return true;
         }
-        if (col < cols - 1 && subHasPath(matrix, rows, cols, str, row, col + 1, len + 1)){
+        if (col < cols - 1 && subHasPath(matrix, rows, cols, str, row, col + 1, len + 1)) {
             return true;
         }
         visited[row * cols + col] = false;
@@ -2501,7 +2538,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
 //        }
         ListNode test = reverseList(head.next);
 //        ListNode test = head.next;
-        while (test != null){
+        while (test != null) {
             System.out.println(test.val);
             test = test.next;
         }
@@ -2528,15 +2565,17 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
 
 }
 
-class Singleton{
+class Singleton {
     private volatile static Singleton instance;
-    private Singleton(){
+
+    private Singleton() {
 
     }
-    public static Singleton getInstance(){
-        if (instance == null){
-            synchronized (Singleton.class){
-                if (instance == null){
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
                     instance = new Singleton();
                 }
             }

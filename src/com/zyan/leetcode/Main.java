@@ -180,7 +180,7 @@ public class Main {
         return ans;
     }
 
-
+    DoubleList a = new DoubleList();
     /**
      * 两数相加，两个数用链表实现
      *
@@ -1250,7 +1250,7 @@ public class Main {
     }
 
     /**
-     * 合并k个链表
+     * 合并k个排序链表
      * 简单的思路是先把所有元素取出来，放到一个数组中，快排，然后再构建链表 空间复杂度较高
      * <p>
      * 或者用一个优先队列，将k个链表的头结点放到队列中，每次取出来第一个，就是最小的，然后将后续的放进去
@@ -1267,12 +1267,7 @@ public class Main {
         if (lists == null || lists.length == 0) {
             return null;
         }
-        PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, new Comparator<ListNode>() {
-            @Override
-            public int compare(ListNode o1, ListNode o2) {
-                return Integer.compare(o1.val, o2.val);
-            }
-        });
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, (o1, o2) -> Integer.compare(o1.val, o2.val));
         ListNode dummy = new ListNode(0);
         ListNode p = dummy;
         for (ListNode list : lists) {
@@ -1708,7 +1703,7 @@ public class Main {
                 return mid;
             }
             //先根据nums[mid] 与 nums[low] 的关系判断 mid 是在左段还是右段
-            if (nums[mid] >= nums[low]) {  //mid在左段
+            if (nums[mid] >= nums[low]) {  //mid在左段 5678912
                 //再判断 target 是在 mid 的左边还是右边，从而调整左右边界 lo 和 hi
                 if (target >= nums[low] && target <= nums[mid]) {  //mid在左，
                     high = mid - 1;
@@ -1824,6 +1819,53 @@ public class Main {
             str = stringBuilder.toString();
         }
         return str;
+    }
+
+
+    public int longestValidParentHeses(String s) {
+        int maxans = 0;
+        int[] dp = new int[s.length()];
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == ')') {
+                if (s.charAt(i - 1) == '(') {
+                    dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+                } else if (i - dp[i - 1] > 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
+                    dp[i] =dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2;
+                }
+            }
+            maxans = Math.max(maxans, dp[i]);
+        }
+        return maxans;
+    }
+
+    /**
+     * 具体做法是我们始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」，这样的做法主要是考虑了边界条件的处理，栈里其他元素维护左括号的下标：
+     *
+     * 对于遇到的每个 \text{‘(’}‘(’ ，我们将它的下标放入栈中
+     * 对于遇到的每个 \text{‘)’}‘)’ ，我们先弹出栈顶元素表示匹配了当前右括号：
+     * 如果栈为空，说明当前的右括号为没有被匹配的右括号，我们将其下标放入栈中来更新我们之前提到的「最后一个没有被匹配的右括号的下标」
+     * 如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+     * 我们从前往后遍历字符串并更新答案即可。
+     * @param s
+     * @return
+     */
+    public int longestValidParentHeses1(String s) {
+        int maxans = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.empty()) {
+                    stack.push(i);
+                } else {
+                    maxans = Math.max(maxans, i - stack.peek());
+                }
+            }
+        }
+        return maxans;
     }
 
 

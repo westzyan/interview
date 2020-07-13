@@ -27,42 +27,6 @@ public class SecondTime {
     }
 
 
-    public int lengthOfLongestSubstring(String s) {
-        int ans = 0;
-        int ans1 = 0;
-        if (s.length() == 1) {
-            return 1;
-        }
-        int i = 0;
-        while (i < s.length() - 1){
-            for (int j = i + 1; j < s.length(); j++) {
-                if (s.charAt(i) == s.charAt(j)) {
-                    ans = Math.max(ans, j - i);
-                    break;
-                }
-            }
-            i++;
-        }
-
-        System.out.println(ans);
-        return ans;
-    }
-
-    public int leng(String s) {
-        int size, i = 0, j, k, max = 0;
-        size = s.length();
-        for (j = 0; j < size; j++) {
-            for (k = i; k < j; k++)
-                if (s.charAt(k) == s.charAt(j)) {
-                    i = k + 1;
-                    break;
-                }
-            if (j - i + 1 > max)
-                max = j - i + 1;
-        }
-        System.out.println(max);
-        return max;
-    }
 
 
     public static void main(String[] args) {
