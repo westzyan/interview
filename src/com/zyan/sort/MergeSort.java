@@ -1,6 +1,6 @@
 package com.zyan.sort;
 
-public class MargeSort {
+public class MergeSort {
     public static void mergeSortCore(int[] array, int low, int high){
         if (low >= high){
             return;

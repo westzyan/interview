@@ -1822,7 +1822,7 @@ public class Main {
     }
 
 
-    public int longestValidParentHeses(String s) {
+    public int longestValidParentheses1(String s) {
         int maxans = 0;
         int[] dp = new int[s.length()];
         for (int i = 1; i < s.length(); i++) {
@@ -1849,7 +1849,7 @@ public class Main {
      * @param s
      * @return
      */
-    public int longestValidParentHeses1(String s) {
+    public int longestValidParentheses(String s) {
         int maxans = 0;
         Stack<Integer> stack = new Stack<>();
         stack.push(-1);
@@ -1869,9 +1869,42 @@ public class Main {
     }
 
 
+    public int longestValidParentheses2(String s) {
+        int left = 0, right = 0, maxlength = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                left++;
+            } else {
+                right++;
+            }
+            if (left == right) {
+                maxlength = Math.max(maxlength, 2 * right);
+            } else if (right > left) {
+                left = right = 0;
+            }
+        }
+        left = right = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == '(') {
+                left++;
+            } else {
+                right++;
+            }
+            if (left == right) {
+                maxlength = Math.max(maxlength, 2 * left);
+            } else if (left > right) {
+                left = right = 0;
+            }
+        }
+        return maxlength;
+    }
+
+
+
     // 101/4
     public static void main(String[] args) {
         System.out.println(new Main().longestPalindrome11("aaab"));
+        System.out.println(new Main().longestValidParentheses1("(((()))"));;
 //        System.out.println((-1^-1));
 //        System.out.println(101 >> 4);
     }
