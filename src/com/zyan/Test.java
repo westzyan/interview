@@ -1481,20 +1481,6 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
         num2[0] = result2;
     }
 
-    /**
-     * 最近公共祖先节点
-     *
-     * @param root
-     * @param p
-     * @param q
-     * @return
-     */
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-//        if (root == null || root == p || root == q){
-//
-//        }
-        return null;
-    }
 
     /**
      * 输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
@@ -2591,5 +2577,6 @@ class Singleton {
         Singleton singleton = Singleton.getInstance();
     }
 }
+
 
 
