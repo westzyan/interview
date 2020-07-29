@@ -1121,6 +1121,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
 
 
     /**
+     * 23
      * 丑数，把只包含质因子2、3和5的数称作丑数（Ugly Number）。
      * 例如6、8都是丑数，但14不是，因为它包含质因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
      *
@@ -2286,7 +2287,7 @@ public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
      *
      * @param head
      */
-    public void posOrder(TreeNode head) {
+    public void postOrder(TreeNode head) {
 //        ConcurrentHashMap<Integer, Integer> concurrentHashMap = new ConcurrentHashMap();
 //        HashMap<Integer, Integer> hashMap = new HashMap<>();
 //        Hashtable
