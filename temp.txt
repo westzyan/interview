@@ -1,0 +1,21 @@
+    public Node connect(Node root) {
+        List<List<Node>> ans = new ArrayList<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Node> list = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                list.add(node);
+            }
+            ans.add(list);
+        }
+        for (List<Node> an : ans) {
+            for (int i = 0; i < an.size() - 1; i++) {
+                an.get(i).next = an.get(i + 1);
+            }
+            an.get(an.size() - 1).next = null;
+        }
+        return root;
+    }
