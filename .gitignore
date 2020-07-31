@@ -3,13 +3,13 @@
 .project
 .settings/
 
-.idea/
 
-*.iws
+
+
 
 .DS_Store
 
-log/
+
 target/
 
 **/out/
