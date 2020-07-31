@@ -1,67 +1,43 @@
 package com.zyan.guanglianda;
-
 import java.util.*;
+/**
+ * Created by zhangyan122 on 2020/7/29
+ */
+public class Test {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int bit = in.nextInt();
+        Queue<int[]> pq = new PriorityQueue<>((o1, o2) -> o2[1]-o1[1]);
+        for (int i = 0; i < n; i++) {
+            int tmp = in.nextInt();
+            pq.add(new int[]{tmp,count(tmp,bit)});
+        }
 
-public  class Test  extends Parent{
-
-    public static void main(String[] args) throws InterruptedException{
-
-//        TreeMap<Integer, String> map = new TreeMap<>();
-//        map.put(1,"4");
-//        map.put(6,"4");
-//        map.put(5,"4");
-//        map.put(3,"4");
-//        map.put(8,"4");
-//        map.put(9,"4");
-//        for (Integer integer : map.keySet()) {
-//            System.out.println(integer);
-//        }
-//        Integer[] arr = {1, 2, 3};
-//        List list = Arrays.asList(arr);
-//        for (Map.Entry<Integer, String> integerStringEntry : map.entrySet()) {
-//            System.out.println(integerStringEntry.getKey());
-//        }
-//        new Test().recu(0);
-        System.out.println(1 | 2);
+        Queue<int[]> nextPq = new LinkedList<>();
+        nextPq.add(new int[]{0,0});
+        int count = 0;
+        while (!nextPq.isEmpty()) {
+            pq.addAll(nextPq);
+            nextPq.clear();
+            int[] base = pq.poll();
+            count++;
+            while (!pq.isEmpty()) {
+                int[] next = pq.poll();
+                if ((base[0] & next[0]) != next[0]) {
+                    nextPq.add(next);
+                }
+            }
+        }
+        System.out.println(count - 1);
     }
 
-    public void recu(int i) {
-        System.out.println(i);
-        recu(i + 1);
+    private static int count(int tmp,int bit) {
+        int ret = 0;
+        while (bit-->0){
+            ret+=tmp&1;
+            tmp = tmp>>>1;
+        }
+        return ret;
     }
-
-//    public static int func(int i){
-//        try {
-////            int b = 5/0;
-//            return i++;
-//        }catch (Exception e){
-//
-//        }finally {
-//            return i++;
-//        }
-//
-//
-//    }
-
-
-
-
-}
-
-//class Child extends Parent{
-//    public int num = 1;
-//}
-
-//class T extends  Thread{
-//    public void run(){
-//        try {
-//            sleep(5000);
-//        } catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-//    }
-//}
-
-class Parent{
-    int num = 10;
 }
