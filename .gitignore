@@ -4,7 +4,7 @@
 .settings/
 
 .idea/
-*.iml
+
 *.iws
 
 .DS_Store
