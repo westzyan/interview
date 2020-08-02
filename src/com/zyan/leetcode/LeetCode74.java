@@ -163,6 +163,26 @@ public class LeetCode74 {
         return res;
     }
 
+    /**
+     * 回溯法
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> subsets1(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        subBacktrack(0, nums, res, new ArrayList<Integer>());
+        return res;
+    }
+
+    private void subBacktrack(int i, int[] nums, List<List<Integer>> res, ArrayList<Integer> tmp) {
+        res.add(new ArrayList<>(tmp));
+        for (int j = i; j < nums.length; j++) {
+            tmp.add(nums[j]);
+            subBacktrack(j + 1, nums, res, tmp);
+            tmp.remove(tmp.size() - 1);
+        }
+    }
+
     public static List<List<Integer>> enumerate(int[] nums) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         res.add(new ArrayList<Integer>());
