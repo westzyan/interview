@@ -427,6 +427,7 @@ public class LeetCode116 {
     }
 
 
+
     public static void main(String[] args) {
         int[] a = {400,200,3,5,9,7,4,6,100};
         System.out.println(new LeetCode116().countBinarySubstrings("11000111000000"));;
