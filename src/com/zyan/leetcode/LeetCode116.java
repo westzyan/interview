@@ -1,9 +1,6 @@
 package com.zyan.leetcode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by zhangyan122 on 2020/7/30
@@ -282,6 +279,157 @@ public class LeetCode116 {
      */
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         return 0;
+    }
+
+
+    /**
+     * 128. 最长连续序列
+     * 给定一个未排序的整数数组，找出最长连续序列的长度。
+     *
+     * 要求算法的时间复杂度为 O(n)。
+     *
+     * 示例:
+     *
+     * 输入: [100, 4, 200, 1, 3, 2]
+     * 输出: 4
+     * 解释: 最长连续序列是 [1, 2, 3, 4]。它的长度为 4。
+     * @param nums
+     * @return
+     */
+    public int longestConsecutive(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        int res = 0;
+        for (int num : nums) {
+            if (!map.containsKey(num)) {
+                int left = map.get(num - 1) == null ? 0 : map.get(num - 1);
+                int right = map.get(num + 1) == null ? 0 : map.get(num + 1);
+                int cur = 1 + left + right;
+                if (cur > res) {
+                    res = cur;
+                }
+                map.put(num, cur);
+                map.put(num - left, cur);
+                map.put(num + right, cur);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 242. 有效的字母异位词
+     * 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+     *
+     * 示例 1:
+     *
+     * 输入: s = "anagram", t = "nagaram"
+     * 输出: true
+     * 示例 2:
+     *
+     * 输入: s = "rat", t = "car"
+     * 输出: false
+     * @param s
+     * @param t
+     * @return
+     */
+    public boolean isAnagram(String s, String t) {
+        int[] cnts = new int[26];
+        for (char c : s.toCharArray()) {
+            cnts[c - 'a']++;
+        }
+        for (char c : t.toCharArray()) {
+            cnts[c - 'a']--;
+        }
+        for (int cnt : cnts) {if (cnt != 0) {
+            return false;
+        }
+        }
+        return true;
+    }
+
+
+    /**
+     * 给定一个字符串，你的任务是计算这个字符串中有多少个回文子串。
+     *
+     *     具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被计为是不同的子串。
+     *
+     *     示例 1:
+     *
+     *     输入: "abc"
+     *     输出: 3
+     *     解释: 三个回文子串: "a", "b", "c".
+     *     示例 2:
+     *
+     *     输入: "aaa"
+     *     输出: 6
+     *     说明: 6个回文子串: "a", "a", "a", "aa", "aa", "aaa".
+     * @param s
+     * @return
+     */
+    int cnt = 0;
+    public int countSubstrings(String s) {
+
+        for (int i = 0; i < s.length(); i++) {
+            extendSubstrings(s, i, i);// 奇数长度
+            extendSubstrings(s, i, i + 1); // 偶数长度
+        }
+        return cnt;
+    }
+    private void extendSubstrings(String s, int start, int end) {
+        while (start >= 0 && end < s.length() && s.charAt(start) == s.charAt(end)) {
+            start--;
+            end++;
+            cnt++;
+        }
+    }
+
+
+    /**
+     * 696. 计数二进制子串
+     * 给定一个字符串 s，计算具有相同数量0和1的非空(连续)子字符串的数量，并且这些子字符串中的所有0和所有1都是组合在一起的。
+     *
+     * 重复出现的子串要计算它们出现的次数。
+     *
+     * 示例 1 :
+     *
+     * 输入: "00110011"
+     * 输出: 6
+     * 解释: 有6个子串具有相同数量的连续1和0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
+     *
+     * 请注意，一些重复出现的子串要计算它们出现的次数。
+     *
+     * 另外，“00110011”不是有效的子串，因为所有的0（和1）没有组合在一起。
+     * 示例 2 :
+     *
+     * 输入: "10101"
+     * 输出: 4
+     * 解释: 有4个子串：“10”，“01”，“10”，“01”，它们具有相同数量的连续1和0。
+     * @param s
+     * @return
+     */
+    public int countBinarySubstrings(String s) {
+        int[] groups = new int[s.length()];
+        int t = 0;
+        groups[0] = 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i - 1) != s.charAt(i)) {
+                t++;
+                groups[t] = 1;
+            } else {
+                groups[t]++;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 1; i <= t; i++) {
+            ans += Math.min(groups[i - 1], groups[i]);
+        }
+        return ans;
+    }
+
+
+    public static void main(String[] args) {
+        int[] a = {400,200,3,5,9,7,4,6,100};
+        System.out.println(new LeetCode116().countBinarySubstrings("11000111000000"));;
     }
 
 
