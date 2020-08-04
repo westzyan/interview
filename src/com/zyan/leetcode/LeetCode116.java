@@ -427,6 +427,298 @@ public class LeetCode116 {
     }
 
 
+    /**
+     * 129. 求根到叶子节点数字之和
+     * 给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的路径都代表一个数字。
+     *
+     * 例如，从根到叶子节点路径 1->2->3 代表数字 123。
+     *
+     * 计算从根到叶子节点生成的所有数字之和。
+     *
+     * 说明: 叶子节点是指没有子节点的节点。
+     *
+     * 示例 1:
+     *
+     * 输入: [1,2,3]
+     *     1
+     *    / \
+     *   2   3
+     * 输出: 25
+     * 解释:
+     * 从根到叶子节点路径 1->2 代表数字 12.
+     * 从根到叶子节点路径 1->3 代表数字 13.
+     * 因此，数字总和 = 12 + 13 = 25.
+     * 示例 2:
+     *
+     * 输入: [4,9,0,5,1]
+     *     4
+     *    / \
+     *   9   0
+     *  / \
+     * 5   1
+     * 输出: 1026
+     * 解释:
+     * 从根到叶子节点路径 4->9->5 代表数字 495.
+     * 从根到叶子节点路径 4->9->1 代表数字 491.
+     * 从根到叶子节点路径 4->0 代表数字 40.
+     * 因此，数字总和 = 495 + 491 + 40 = 1026.
+     * @param root
+     * @return
+     */
+    public int sumNumbers(TreeNode root) {
+        return helper(root, 0);
+    }
+
+    private int helper(TreeNode root, int temp) {
+        if (root == null) {
+            return 0;
+        }
+        temp = temp * 10 + root.val;
+        if (root.left == null && root.right == null) {
+            return temp;
+        }
+        return helper(root.left, temp) + helper(root.right, temp);
+    }
+
+
+    /**
+     * 130. 被围绕的区域
+     * 给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
+     *
+     * 找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+     *
+     * 示例:
+     *
+     * X X X X
+     * X O O X
+     * X X O X
+     * X O X X
+     * 运行你的函数后，矩阵变为：
+     *
+     * X X X X
+     * X X X X
+     * X X X X
+     * X O X X
+     * 解释:
+     *
+     * 被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+     * 思路：
+     * 这道题我们拿到基本就可以确定是图的 dfs、bfs 遍历的题目了。题目中解释说被包围的区间不会存在于边界上，所以我们会想到边界上的 OO 要特殊处理，只要把边界上的 OO 特殊处理了，那么剩下的 OO 替换成 XX 就可以了。问题转化为，如何寻找和边界联通的 OO，我们需要考虑如下情况。
+     *
+     *
+     * X X X X
+     * X O O X
+     * X X O X
+     * X O O X
+     * 这时候的 OO 是不做替换的。因为和边界是连通的。为了记录这种状态，我们把这种情况下的 OO 换成 # 作为占位符，待搜索结束之后，遇到 OO 替换为 XX（和边界不连通的 OO）；遇到 #，替换回 $O(和边界连通的 OO)。
+     *
+     * 如何寻找和边界联通的OO? 从边界出发，对图进行 dfs 和 bfs 即可。这里简单总结下 dfs 和 dfs。
+     *
+     * bfs 递归。可以想想二叉树中如何递归的进行层序遍历。
+     * bfs 非递归。一般用队列存储。
+     * dfs 递归。最常用，如二叉树的先序遍历。
+     * dfs 非递归。一般用 stack。
+     * @param board
+     */
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0) {
+            return;
+        }
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                boolean isEdge = false;
+                if (i == 0 || j == 0 || i == m - 1 || j == n - 1) {
+                    isEdge = true;
+                }
+                if (isEdge && board[i][j] == 'O') {
+                    dfs(board, i, j);
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+                if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    public void dfs(char[][] board, int i, int j) {
+        if (i < 0 || j < 0 || i >= board.length || j >= board[0].length || board[i][j] == 'X' || board[i][j] == '#') {
+            return;
+        }
+        board[i][j] = '#';
+        dfs(board, i - 1, j);
+        dfs(board, i + 1, j);
+        dfs(board, i, j - 1);
+        dfs(board, i, j + 1);
+
+    }
+
+    /**
+     * 131. 分割回文串
+     * 给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
+     *
+     * 返回 s 所有可能的分割方案。
+     *
+     * 示例:
+     *
+     * 输入: "aab"
+     * 输出:
+     * [
+     *   ["aa","b"],
+     *   ["a","a","b"]
+     * ]
+     *
+     * 思考如何根据这棵递归树编码：
+     *
+     * 1、每一个结点表示剩余没有扫描到的字符串，产生分支是截取了剩余字符串的前缀；
+     *
+     * 2、产生前缀字符串的时候，判断前缀字符串是否是回文。
+     *
+     * 如果前缀字符串是回文，则可以产生分支和结点；
+     * 如果前缀字符串不是回文，则不产生分支和结点，这一步是剪枝操作。
+     * 3、在叶子结点是空字符串的时候结算，此时从根结点到叶子结点的路径，就是结果集里的一个结果，使用深度优先遍历，记录下所有可能的结果。
+     *
+     * 采用一个路径变量 path 搜索，path 全局使用一个（注意结算的时候，需要生成一个拷贝），因此在递归执行方法结束以后需要回溯，即将递归之前添加进来的元素拿出去；
+     * path 的操作只在列表的末端，因此合适的数据结构是栈。
+     * @param s
+     * @return
+     */
+    public List<List<String>> partition(String s) {
+        int len = s.length();
+        List<List<String>> res = new ArrayList<>();
+        if (len == 0) {
+            return res;
+        }
+        Stack<String> stack = new Stack<>();
+        backtracking(s, 0, len, stack, res);
+        return res;
+    }
+
+    private void backtracking(String s, int start, int len, Stack<String> path, List<List<String>> res) {
+        if (start == len) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = start; i < len; i++) {
+            if (!checkPalindrome(s, start, i)) {
+                continue;
+            }
+            path.push(s.substring(start, i + 1)); //截取start到i
+            backtracking(s, i + 1, len, path, res);
+            path.pop();
+        }
+    }
+
+    /**
+     * 这一步的时间复杂度是 O(N)，因此，可以采用动态规划先把回文子串的结果记录在一个表格里
+     *
+     * @param str
+     * @param left  子串的左边界，可以取到
+     * @param right 子串的右边界，可以取到
+     * @return
+     */
+    private boolean checkPalindrome(String str, int left, int right) {
+        // 严格小于即可
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+
+    /**
+     * 132. 分割回文串 II
+     * 给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
+     *
+     * 返回符合要求的最少分割次数。
+     *
+     * 示例:
+     *
+     * 输入: "aab"
+     * 输出: 1
+     * 解释: 进行一次分割就可将 s 分割成 ["aa","b"] 这样两个回文子串。
+     *步骤 1：思考状态
+     * 状态就尝试定义成题目问的那样，看看状态转移方程是否容易得到。
+     *
+     * dp[i]：表示前缀子串 s[0:i] 分割成若干个回文子串所需要最小分割次数。
+     *
+     * 步骤 2：思考状态转移方程
+     * 思考的方向是：大问题的最优解怎么由小问题的最优解得到。
+     *
+     * 即 dp[i] 如何与 dp[i - 1]、dp[i - 2]、...、dp[0] 建立联系。
+     *
+     * 比较容易想到的是：如果 s[0:i] 本身就是一个回文串，那么不用分割，即 dp[i] = 0 ，这是首先可以判断的，否则就需要去遍历；
+     *
+     * 接下来枚举可能分割的位置：即如果 s[0:i] 本身不是一个回文串，就尝试分割，枚举分割的边界 j。
+     *
+     * 如果 s[j + 1, i] 不是回文串，尝试下一个分割边界。
+     *
+     * 如果 s[j + 1, i] 是回文串，则 dp[i] 就是在 dp[j] 的基础上多一个分割。
+     *
+     * 于是枚举 j 所有可能的位置，取所有 dp[j] 中最小的再加 1 ，就是 dp[i]。
+     *
+     * 得到状态转移方程如下：
+     *
+     *
+     * dp[i] = min([dp[j] + 1 for j in range(i) if s[j + 1, i] 是回文])
+     *
+     *
+     * @param s
+     * @return
+     */
+    public int minCut(String s) {
+        int len = s.length();
+        if (len < 2) {
+            return 0;
+        }
+        int[] dp = new int[len];
+        // 2 个字符最多分割 1 次；
+        // 3 个字符最多分割 2 次
+        // 初始化的时候，设置成为这个最多分割次数
+        for (int i = 0; i < len; i++) {
+            dp[i] = i;
+        }
+        boolean[][] checkPalindrome = new boolean[len][len];
+        for (int right = 0; right < len; right++) {
+            for (int left = 0; left <= right; left++) {
+                if (s.charAt(left) == s.charAt(right) && (right - left <= 2 || checkPalindrome[left + 1][right - 1])) {
+                    checkPalindrome[left][right] = true;
+                }
+            }
+        }
+
+        // 1 个字符的时候，不用判断，因此 i 从 1 开始
+        for (int i = 1; i < len; i++) {
+            if (checkPalindrome[0][i]) {
+                dp[i] = 0;
+                continue;
+            }
+            // 注意：这里是严格，要保证 s[j + 1:i] 至少得有一个字符串
+            for (int j = 0; j < i; j++) {
+                if (checkPalindrome[j + 1][i]) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return dp[len - 1];
+    }
+
+
+
+
 
     public static void main(String[] args) {
         int[] a = {400,200,3,5,9,7,4,6,100};
