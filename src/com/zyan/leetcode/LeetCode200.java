@@ -47,6 +47,54 @@ public class LeetCode200 {
     }
 
 
+    /**
+     * 234. 回文链表
+     * 请判断一个链表是否为回文链表。
+     *
+     * 示例 1:
+     *
+     * 输入: 1->2
+     * 输出: false
+     * 示例 2:
+     *
+     * 输入: 1->2->2->1
+     * 输出: true
+     * 进阶：
+     * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题
+     *
+     * 方法：快慢指针，慢指针走一步指针反向一步，走到中间，判断
+     * @param head
+     * @return
+     */
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode fast = head;
+        ListNode slow = head;
+        ListNode cur = null;
+        ListNode pre = null;
+        while (fast != null && fast.next != null) {
+            cur = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+            cur.next = pre;
+            pre = cur;
+        }
+        if (fast != null) {
+            slow = slow.next;
+        }
+        while (pre != null) {
+            if (pre.val != slow.val) {
+                return false;
+            }
+            pre = pre.next;
+            slow = slow.next;
+        }
+        return true;
+    }
+
+
     public static void main(String[] args) {
         new LeetCode200().isIsomorphic("paper", "title");
     }
