@@ -27,11 +27,13 @@ public class Main2 {
             set.add(num);
         }
         int max = 0;
+        int count = 1;
         for (int num : nums) {
-            for (int i = 1; i < num && set.size() < n; i++) {
+            for (int i = count; i < num && set.size() < n; i++) {
                 if (!set.contains(i)) {
                     ans.add(i);
                     set.add(i);
+                    count = i;
                     if (ans.size() == n) {
                         break;
                     }
@@ -42,6 +44,7 @@ public class Main2 {
                 break;
             }
             ans.add(num);
+            count = num;
             if (ans.size() == n) {
                 break;
             }
