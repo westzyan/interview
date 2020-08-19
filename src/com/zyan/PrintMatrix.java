@@ -40,7 +40,7 @@ public class PrintMatrix {
                 list.add(mat[up][col]);
             }
             up++;
-            if (up > down){ //TODO 一会换成等于试一下
+            if (up > down){
                 break;
             }
             for (int row = up; row <= down ; row++) {
@@ -184,6 +184,6 @@ public class PrintMatrix {
         /**
          * 1 2 4 7 5 3 6 8 10 11 9 12
          */
-        printMatrixZigZag(arr);
+        printMatrixRing(arr, 4, 3);
     }
 }

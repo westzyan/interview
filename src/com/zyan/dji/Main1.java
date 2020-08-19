@@ -34,6 +34,7 @@ public class Main1 {
         int[] visited = new int[graph.length];
         for (int i = 1; i < graph.length; i++) {
             int min = Integer.MAX_VALUE;
+
             int index = -1;
             for (int j = 0; j < graph.length; j++) {
                 if (visited[j] == 0 && graph[source][j] < min) {
