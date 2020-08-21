@@ -1,16 +1,16 @@
 package com.zyan.huawei;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class Main8191 {
-    public static void main(String[] args) {
-        int m = 10;
-        int[][] array = new int[m][m];
-        ArrayList<ArrayList<Integer>> arrayLists = printMatrixRing(array, 10, 10);
-//        for (ArrayList<Integer> arrayList : arrayLists) {
-//            System.out.println(arrayList);
-//        }
-        System.out.println(arrayLists);
+public class Main8191  {
+
+    public static void main(String[] args) throws IOException {
+        A obj = new D();
+        System.out.println(obj instanceof A);
+        System.out.println(obj instanceof B);
+        System.out.println(obj instanceof C);
+        System.out.println(obj instanceof D);
     }
     public static ArrayList<ArrayList<Integer>> printMatrixRing(int[][] mat, int m, int n){
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();
@@ -77,4 +77,19 @@ public class Main8191 {
         System.out.println(count);
         return res;
     }
+
+    public static int method(int num) {
+        num++;
+        try {
+            return ++num;
+        } finally {
+            num++;
+            System.out.println(num);
+        }
+    }
 }
+
+class A{}
+class B extends A{}
+class C extends A{}
+class D extends B{}
