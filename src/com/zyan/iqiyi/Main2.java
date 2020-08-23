@@ -1,4 +1,4 @@
-package com.zyan.bilibili;
+package com.zyan.iqiyi;
 
 import java.util.Scanner;
 import java.util.Stack;
@@ -9,10 +9,16 @@ import java.util.Stack;
 public class Main2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
+        String string = scanner.nextLine();
+        if (isValidExp(string)) {
+            System.out.println("True");
+        } else {
+            System.out.println("False");
+        }
+//        System.out.println(isValidExp(string));
     }
 
-    public boolean IsValidExp (String s) {
+    public static boolean isValidExp (String s) {
         Stack<Character> stack = new Stack<>();
         char[] chars = s.toCharArray();
         for (char aChar : chars) {
