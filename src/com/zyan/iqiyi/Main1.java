@@ -15,5 +15,12 @@ public class Main1 {
             }
         }
         System.out.println(num);
+        System.out.println(new Integer(100) == new Integer(100));
+    }
+    static {
+        System.out.println("ddd");
+    }
+    public Main1() {
+        System.out.println("main");
     }
 }
