@@ -102,4 +102,85 @@ public class ListMergeSort {
         p.next = null;
         return next;
     }
+
+
+
+    public static ListNode mergeSortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode fast = head.next;
+        ListNode slow = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode second = slow.next;
+        slow.next = null;
+        head = mergeSortList(head);
+        second = mergeSortList(second);
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (head != null && second != null) {
+            if (head.val < second.val) {
+                cur.next = head;
+                head = head.next;
+            } else {
+                cur.next = second;
+                second = second.next;
+            }
+            cur = cur.next;
+        }
+        cur.next = head == null ? second : head;
+        return dummy.next;
+    }
+
+    public static void main(String[] args) {
+        ListNode head = stringToListNode("2,6,9,8,6,3,4,7,5,1,0");
+        head = mergeSortList(head);
+        prettyPrintLinkedList(head);
+    }
+
+    public static ListNode stringToListNode(String input) {
+        // Generate array from the input
+        int[] nodeValues = stringToIntegerArray(input);
+
+        // Now convert that list into linked list
+        ListNode dummyRoot = new ListNode(0);
+        ListNode ptr = dummyRoot;
+        for(int item : nodeValues) {
+            ptr.next = new ListNode(item);
+            ptr = ptr.next;
+        }
+        return dummyRoot.next;
+    }
+
+    public static int[] stringToIntegerArray(String input) {
+        input = input.trim();
+//        input = input.substring(1, input.length() - 1);
+        if (input.length() == 0) {
+            return new int[0];
+        }
+
+        String[] parts = input.split(",");
+        int[] output = new int[parts.length];
+        for(int index = 0; index < parts.length; index++) {
+            String part = parts[index].trim();
+            output[index] = Integer.parseInt(part);
+        }
+        return output;
+    }
+
+    public static void prettyPrintLinkedList(ListNode node) {
+        while (node != null && node.next != null) {
+            System.out.print(node.val + "->");
+            node = node.next;
+        }
+
+        if (node != null) {
+            System.out.println(node.val);
+        } else {
+            System.out.println("Empty LinkedList");
+        }
+    }
 }
