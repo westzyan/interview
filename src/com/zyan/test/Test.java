@@ -3,7 +3,7 @@ package com.zyan.test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test {
+public class Test implements InterfaceA, InterfaceB{
     public static void main(String[] args) {
         List<Integer> list = new ArrayList<>();
         list.add(1);
@@ -12,6 +12,11 @@ public class Test {
         list.add(4);
         list.add(5);
 
+
+    }
+
+    @Override
+    public void test() {
 
     }
 }
