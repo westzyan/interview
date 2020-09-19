@@ -1139,13 +1139,13 @@ public class Main {
     /**
      * 方法一还有改进的余地：我们可以只在序列仍然保持有效时才添加 '(' or ')'，而不是像 方法一 那样每次添加。我们可以通过跟踪到目前为止放置的左括号和右括号的数目来做到这一点，
      * <p>
-     * 如果左括号数量不大于 nn，我们可以放一个左括号。如果右括号数量小于左括号的数量，我们可以放一个右括号。
+     * 如果左括号数量不大于 n，我们可以放一个左括号。如果右括号数量小于左括号的数量，我们可以放一个右括号。
      *
      * @param n
      * @return
      */
     public List<String> generateParenthesis1(int n) {
-        List<String> ans = new ArrayList();
+        List<String> ans = new ArrayList<>();
         backtrack(ans, new StringBuilder(), 0, 0, n);
         return ans;
     }

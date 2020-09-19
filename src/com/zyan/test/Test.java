@@ -1,22 +1,10 @@
 package com.zyan.test;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test implements InterfaceA, InterfaceB{
-    public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-
-
-    }
-
-    @Override
-    public void test() {
-
-    }
+public class Test {
+    
 }

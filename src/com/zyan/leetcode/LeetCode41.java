@@ -112,11 +112,11 @@ public class LeetCode41 {
         for (int i = 1; i <= max; i++) {
             boolean isStart = false;
             int temp = 0;
-            for (int j = 0; j < height.length; j++) {
-                if (isStart && height[j] < i) {
+            for (int value : height) {
+                if (isStart && value < i) {
                     temp++;
                 }
-                if (height[j] >= i) {
+                if (value >= i) {
                     sum = sum + temp;
                     temp = 0;
                     isStart = true;
