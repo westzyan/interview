@@ -20,9 +20,9 @@ public class LeetCode950 {
         Queue<Integer> queue = new LinkedList<>();
         for (int i = 0;i < deck.length;i++) {// 倒着遍历，便是按降序访问
             queue.add(deck[i]);// 选最大值插入队列
-//            if (i == 0) {// 数组中所有元素均在队列中，退出过程
-//                break;
-//            }
+            if (i == 0) {// 数组中所有元素均在队列中，退出过程
+                break;
+            }
 
             queue.add(queue.poll());// 将队头元素插入到队尾中
         }
@@ -37,7 +37,7 @@ public class LeetCode950 {
     }
 
     public static void main(String[] args) {
-        int[] nums = {17,13,11,2,3,5,7};
+        int[] nums = {2,3,5,1,7};
         System.out.println(Arrays.toString(deckRevealedIncreasing(nums)));
     }
 }
